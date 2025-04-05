@@ -13,3 +13,7 @@
     margin-top: 40rpx;
     margin-bottom: 40rpx;
 }
+.btn-img{
+    width: 500rpx;
+    height: 100rpx;
+}
