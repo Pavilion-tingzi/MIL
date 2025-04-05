@@ -1,0 +1,17 @@
+<template name="dropdown">
+    <view class="select">
+        <view class="drop-down">
+            <van-dropdown-menu color="#9d8e01">
+                <van-dropdown-item title="{{dateRangeText}}" id="date-picker" bind:open="onDropdownOpen">
+                    <!-- 日历组件放在下拉项中 -->
+                    <van-calendar show="{{showCalendar}}" type="range" min-date="{{minDate}}" max-date="{{maxDate}}" bind:close="onCalendarClose" bind:confirm="onCalendarConfirm" />
+                </van-dropdown-item>
+                <van-dropdown-item value="{{ value1 }}" options="{{ option1 }}" />
+            </van-dropdown-menu>
+        </view>
+        <view class="export">
+            <image class="img-export" src="/images/icon/export.png" />
+            <text class="text-export">导出</text>
+        </view>
+    </view>
+</template>

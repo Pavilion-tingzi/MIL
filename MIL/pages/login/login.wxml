@@ -1,0 +1,40 @@
+<view class="login">
+    <image class="bkg_img" src="/images/background/back.png" />
+    <image class="btn_login" src="/images/icon/btn_login.png" bind:tap="showPopup" />
+    <image class="btn_register" src="/images/icon/btn_register.png" bind:tap="showPopup_rg" />
+</view>
+<!-- 登录弹出层 -->
+<van-popup show="{{ show }}" closeable position="bottom" custom-style="height: 40%" bind:close="onClose">
+    <view class="pop-content">
+        <text class="pop-title">用户登录</text>
+        <view class="pop-inputs">
+            <van-cell-group>
+                <van-field value="" required clearable label="用户名" placeholder="请输入用户名" />
+                <van-field value="" type="password" label="密码" placeholder="请输入密码" required />
+            </van-cell-group>
+        </view>
+        <view class="pop-agreement">
+            <van-checkbox value="{{ checked }}" bind:change="onChange"></van-checkbox>
+            <text class="pop-arm-txt">用户协议</text>
+        </view>
+        <image class="pop-btn-login" src="/images/icon/btn_login.png" bind:tap="onLogin" />
+    </view>
+</van-popup>
+<!-- 注册弹出层 -->
+<van-popup show="{{ show_rg }}" closeable position="bottom" custom-style="height: 50%" bind:close="onClose">
+    <view class="pop-content">
+        <text class="pop-title">用户注册</text>
+        <view class="pop-inputs">
+            <van-cell-group>
+                <van-field value="" required clearable label="用户名" placeholder="请输入用户名" />
+                <van-field value="" type="password" label="密码" placeholder="请输入密码" required />
+                <van-field value="" type="password" label="确认密码" placeholder="请再次输入密码" required />
+            </van-cell-group>
+        </view>
+        <view class="pop-agreement">
+            <van-checkbox value="{{ checked }}" bind:change="onChange"></van-checkbox>
+            <text class="pop-arm-txt">用户协议</text>
+        </view>
+        <image class="pop-btn-login" src="/images/icon/btn_register.png" bind:tap="onRegister" />
+    </view>
+</van-popup>

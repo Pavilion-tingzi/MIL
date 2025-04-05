@@ -1,0 +1,26 @@
+<import src="/templates/header2/header2.wxml" />
+
+<view>
+  <template is="header" data="{{ title: '记一笔' }}" />
+  <view class="container">
+    <!-- 选择计入的内容类别 -->
+    <view class="selects">
+        <van-radio-group value="{{ radio }}" direction="horizontal" bind:change="onChange_radio" custom-class="custom-radio-group">
+            <van-radio use-icon-slot value="{{ radio }}" name="1" custom-class="custom-radio">
+                <image class='radio_icon' slot="icon" src="{{ radio === '1' ? radio_icon.active : radio_icon.normal }}" />
+            </van-radio>
+            <van-radio use-icon-slot value="{{ radio }}" name="2" custom-class="custom-radio">
+                <image class='radio_icon' slot="icon" src="{{ radio === '2' ? radio_icon.active_2 : radio_icon.normal_2 }}" />
+            </van-radio>
+            <van-radio use-icon-slot value="{{ radio }}" name="3" custom-class="custom-radio">
+                <image class='radio_icon' slot="icon" src="{{ radio === '3' ? radio_icon.active_3 : radio_icon.normal_3 }}" />
+            </van-radio>
+        </van-radio-group>
+    </view>
+    <view class="inputs">
+        <van-divider />
+        
+    </view>
+    <image class="btn-img" src="/images/icon/confirm.png" />
+  </view>
+</view>

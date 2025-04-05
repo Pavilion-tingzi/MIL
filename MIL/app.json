@@ -1,0 +1,63 @@
+{
+    "pages": [
+        "pages/login/login",
+        "pages/index/index",
+        "pages/profit/profit",
+        "pages/my/my",
+        "pages/record/record",
+        "templates/header2.wxml",
+        "templates/drawdown/draw_down.wxml"
+    ],
+    "tabBar": {
+        "selectedColor": "#368ea5",
+        "list": [
+            {
+                "pagePath": "pages/index/index",
+                "text": "现金流",
+                "iconPath": "images/icon/index.png",
+                "selectedIconPath": "images/icon/index-o.png"
+            },
+            {
+                "pagePath": "pages/profit/profit",
+                "text": "结余",
+                "iconPath": "images/icon/profit.png",
+                "selectedIconPath": "images/icon/profit-o.png"
+            },
+            {
+                "pagePath": "pages/my/my",
+                "text": "我的",
+                "iconPath": "images/icon/my.png",
+                "selectedIconPath": "images/icon/my-o.png"
+            }
+        ]
+    },
+    "window": {
+        "navigationBarTitleText": "账本里的时光",
+        "navigationBarBackgroundColor": "#ffffff",
+        "backgroundColor": "#ffffff",
+        "backgroundTextStyle": "light",
+        "navigationBarTextStyle": "black"
+    },
+    "sitemapLocation": "sitemap.json",
+    "usingComponents": {
+        "van-tab": "@vant/weapp/tab/index",
+        "van-tabs": "@vant/weapp/tabs/index",
+        "van-dropdown-menu": "@vant/weapp/dropdown-menu/index",
+        "van-dropdown-item": "@vant/weapp/dropdown-item/index",
+        "van-calendar": "@vant/weapp/calendar/index",
+        "van-cell": "@vant/weapp/cell/index",
+        "van-cell-group": "@vant/weapp/cell-group/index",
+        "van-tag": "@vant/weapp/tag/index",
+        "ec-canvas": "/components/ec-canvas/ec-canvas",
+        "van-progress": "@vant/weapp/progress/index",
+        "van-button": "@vant/weapp/button/index",
+        "van-radio": "@vant/weapp/radio/index",
+        "van-radio-group": "@vant/weapp/radio-group/index",
+        "van-swipe-cell": "@vant/weapp/swipe-cell/index",
+        "van-divider": "@vant/weapp/divider/index",
+        "van-popup": "@vant/weapp/popup/index",
+        "van-field": "@vant/weapp/field/index",
+        "van-checkbox": "@vant/weapp/checkbox/index",
+        "van-checkbox-group": "@vant/weapp/checkbox-group/index"
+    }
+}

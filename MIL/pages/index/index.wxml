@@ -1,0 +1,75 @@
+<import src="/templates/header/header.wxml" />
+<import src="/templates/dropdown/dropdown.wxml" />
+<view>
+    <template is="header" data="{{ title: '首页' }}" />
+    <!-- 页面其他内容 -->
+    <template is="dropdown" data="{{...dropdown1}}" />
+
+    <van-tabs active="{{ active }}" bind:change="onChange" title-active-color="#9d8e01" color="#9d8e01">
+        <van-tab title="明细表">
+            <!-- 明细列表 -->
+            <view class="content" wx:for="{{cell_values}}" wx:key="cell_id">
+                    <van-cell-group title="{{item.cell_date}}">
+                        <van-swipe-cell right-width="{{ 130 }}" wx:for="{{item.cell_date_values}}">
+                            <van-cell value="{{item.cell_price}}" icon="{{item.cell_icon}}">
+                                <view slot="title">
+                                    <view class="title-container">
+                                        <view class="van-cell-text">{{item.cell_class}}</view>
+                                        <van-tag type="danger">{{item.cell_tag}}</van-tag>
+                                    </view>
+                                    <view class="title-container2">
+                                        <text class="tap">{{item.cell_belong}}</text>
+                                    </view>
+                                </view>
+                            </van-cell>
+                            <view slot="right" class="swipe-actions">
+                                <view class="action-btn edit-btn" bindtap="onEdit" data-id="{{item.id}}">修改</view>
+                                <view class="action-btn delete-btn" bindtap="onDelete" data-id="{{item.id}}">删除</view>
+                            </view>
+                        </van-swipe-cell>     
+                    </van-cell-group>    
+            </view>
+            <!-- 悬浮按钮（记一笔） -->
+            <view class="float-button" wx:if="{{active === 0}}" bind:tap="switchToRecord">
+                <image src="/images/icon/writebutton.png" mode="aspectFit" ></image>
+            </view>
+        </van-tab>
+
+        <van-tab title="统计表">
+            <view class="choice">
+                <van-radio-group value="{{ radio }}" direction="horizontal" bind:change="onChange_radio" custom-class="custom-radio-group">
+                    <van-radio use-icon-slot value="{{ radio }}" name="1" custom-class="custom-radio">
+                        <image class='radio_icon' slot="icon" src="{{ radio === '1' ? radio_icon.active : radio_icon.normal }}" />
+                    </van-radio>
+                    <van-radio use-icon-slot value="{{ radio }}" name="2" custom-class="custom-radio">
+                        <image class='radio_icon' slot="icon" src="{{ radio === '2' ? radio_icon.active_1 : radio_icon.normal_1 }}" />
+                    </van-radio>
+                </van-radio-group>
+                <text class="choice-text">{{factor}}
+                </text>
+            </view>
+            <view class="content-stat">
+                <view class="chart-container">
+                    <ec-canvas id="mychart" canvas-id="mychart" ec="{{ ec }}" style="width:100%;height:100%" wx:if="{{showChart}}"></ec-canvas >
+                </view>
+                <view class="list">
+                    <view class="list-content" wx:for="{{cell_values_s}}">
+                        <van-cell-group title="">
+                            <van-cell value="{{item.cell_price}}" icon="{{item.cell_icon}}">
+                                <view slot="title">
+                                    <view class="title-container">
+                                        <view class="van-cell-text">{{item.cell_class}}</view>
+                                        <view class="van-cell-pecent">{{item.cell_percent_text}}</view>
+                                    </view>
+                                    <view class="title-container2">
+                                        <van-progress percentage="{{item.cell_percent}}" />
+                                    </view>
+                                </view>
+                            </van-cell>
+                        </van-cell-group>
+                    </view>
+                </view>
+            </view>
+        </van-tab>
+    </van-tabs>
+</view>

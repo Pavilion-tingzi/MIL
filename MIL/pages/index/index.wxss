@@ -1,0 +1,109 @@
+@import "/templates/header/header.wxss";
+@import "/templates/dropdown/dropdown.wxss";
+/* 调整日历弹出层样式 */
+
+  .title-container {
+    display: inline-flex;  /* 行内弹性布局 */
+    align-items: center;   /* 垂直居中 */
+    gap: 8px;             /* 元素间距（可选） */
+  }
+  .title-container2{
+      width: 450rpx;
+  }
+/* 替换原有 ec-canvas 样式 */
+.chart-container {
+    width: 70%;
+    height: 500rpx;
+    position: flex;
+    justify-content: center;
+    margin: 0 auto;
+  }
+  ec-canvas {
+    display: flex;           /* 启用flex布局 */
+    justify-content: center; /* 水平居中 */
+    z-index: 1;
+  }
+  /* 悬浮按钮样式 */
+.float-button {
+    position: fixed;
+    right: 0rpx;
+    bottom: 30rpx;
+    z-index: 9999;
+}
+
+.float-button image {
+    width: 200rpx; /* 调整图片大小 */
+    height: 200rpx;
+    right: 0;
+    /* 可选添加图片阴影 */
+    filter: drop-shadow(0 0 8rpx rgba(0, 0, 0, 0.2));
+}
+.van-cell-pecent{
+    color: gray;
+}
+.choice{
+    width: 100%;
+    height: 40rpx;
+    display: flex; /* 修正：position改为display */
+    align-items: center;
+    padding-left: 40rpx;  /* 整体左侧间距 */
+    padding-top: 10rpx;
+}
+/* 自定义radio组样式 */
+.custom-radio-group {
+    display: flex;
+    gap: 0; /* 完全去除间隙 */
+    padding: 0;
+    margin-left: 0;
+    background-color: palevioletred;
+}
+
+/* 自定义radio样式 */
+.custom-radio {
+    margin: 0;
+    padding: 0;
+}
+
+.radio_icon {
+    width: 80rpx; /* 缩小图标尺寸 */
+    height: 40rpx;
+    margin: 0 0rpx; /* 最小化边距 */
+    display: block;
+}
+.choice-text{
+    font-size: small;
+    margin-left: 150rpx;
+    color: #0e424d;
+}
+
+/* 右滑操作容器 */
+.swipe-actions {
+    display: flex;
+    height: 100%;
+}
+
+/* 通用按钮样式 */
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 15px;
+    width: 65px;  /* 每个按钮宽度65，总宽度130 */
+    height: 100%;
+}
+
+/* 修改按钮 */
+.edit-btn {
+    background-color: #1989fa;  /* 蓝色 */
+}
+
+/* 删除按钮 */
+.delete-btn {
+    background-color: #f44;  /* 红色 */
+}
+
+/* 按钮点击效果 */
+.action-btn:active {
+    opacity: 0.8;
+}

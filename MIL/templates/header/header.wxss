@@ -1,0 +1,15 @@
+.header1{
+    display: flex;
+    position: relative;
+}
+.img{
+    height: 200rpx;
+    width: 100%;
+}
+.search{
+    height: 60rpx;
+    width: 60rpx;
+    position: absolute;
+    top: 10rpx;
+    right: 10rpx;
+}

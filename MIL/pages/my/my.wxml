@@ -1,0 +1,48 @@
+<view>
+<!-- 头部 -->
+<view class="head">
+    <view class="invite">
+        <image class="invite-img" wx:if="{{has_news}}" src="{{news_icon}}" />
+        <text class="invite-txt">邀请消息</text>
+    </view>
+    <view class="profile">
+        <image class="profile-img" src="{{profile_icon}}"></image>
+        <text class="profile-name">{{my_name}}</text>
+        <text class="profile-btn">查看唯一码</text>
+        <text class="profile-btn">修改密码</text>
+        <text class="profile-btn" bind:tap="redirectToPage">注销</text>
+    </view>
+</view>
+<!-- 团队成员 -->
+<view class="group">
+    <van-divider />
+    <text class="group-title">团队成员：</text>
+    <view class="group-member">
+        <view class="mb"  wx:for="{{group_members}}">
+            <view class="mb-pf">
+                <image class="mb-pf-img" src="{{item.mb_icon}}" />
+                <image class="mb-delete-img" src="{{item.mb_delete_icon}}" />
+            </view>
+            <text class="mb-name">{{item.mb_name}}</text>
+        </view>
+        <image class="add-group-member" src="{{add_gpmb_icon}}" />
+    </view>
+    <van-divider />
+</view>
+<!-- 设置项 -->
+<view class="config">
+    <van-divider />
+    <view class="config-title">
+        <text class="config-title-txt">我的设置:</text>
+        <text class="add-config">添加</text>
+    </view>
+    <view class="config-list">
+        <view class="config-list-content" wx:for="{{configs}}">
+            <text class="config-txt">{{item.cf_name}}：{{item.cf_account}}元，每月{{item.cf_date}}号{{item.cf_class}}</text>
+            <image class="config-mdf" src="/images/icon/modify.png" />
+            <image class="config-mdf" src="/images/icon/delete_2.png" />
+        </view>
+    </view>
+    <van-divider />
+</view>
+</view>

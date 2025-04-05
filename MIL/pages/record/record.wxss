@@ -1,0 +1,15 @@
+@import "/templates/header2/header2.wxss";
+
+.container{
+    padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.radio_icon {
+    width: 120rpx; /* 缩小图标尺寸 */
+    height: 60rpx;
+    margin-top: 40rpx;
+    margin-bottom: 40rpx;
+}

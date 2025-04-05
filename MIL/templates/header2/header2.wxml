@@ -1,0 +1,6 @@
+<!-- templates/header.wxml -->
+<template name="header">
+  <view class="header2"> 
+    <image class="img" src="/images/background/header.png" />
+  </view>
+</template>

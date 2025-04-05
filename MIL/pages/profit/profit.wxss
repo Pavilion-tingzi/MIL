@@ -1,0 +1,70 @@
+@import "/templates/header2/header2.wxss";
+@import "/templates/dropdown/dropdown.wxss";
+
+.ec-container{
+    width: 100%;
+    height: 400rpx;
+    position: flex;
+    justify-content: center;
+    margin-top: 10rpx;
+}
+ec-canvas {
+    display: flex;           /* 启用flex布局 */
+    justify-content: center; /* 水平居中 */
+  }
+  .total_value{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 40rpx;
+  }
+  .tv_1{
+      font-size: larger;
+      margin-bottom: 10rpx;
+      color: #0e424d;
+      font-weight: bold;
+  }
+  .tv_2{
+    font-size: small;
+    color: #368ea4;
+}
+.detail-container{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20rpx;
+}
+.detail-btn{
+    font-size: small;
+    margin-right: 40rpx;
+    color: #0e424d;
+}
+.monthly-values{
+    display: flex;
+    width: 100%;
+}
+.mv-date{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+}
+.mv-values{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 70%;
+}
+.mv-date-txt{
+    color: #0e424d;
+    font-size: 12px;
+}
+.mv-profit-txt{
+    font-size: 15px;
+    color: #0e424d;
+}
+.mv-inex-txt{
+    font-size: 10px;
+    color: #368ea4;
+}
+

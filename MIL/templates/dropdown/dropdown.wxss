@@ -1,0 +1,51 @@
+.drop-down{
+    border-color: wheat;
+    border-width: 1rpx;
+}
+van-calendar {
+    --calendar-height: 1000rpx;
+  }
+  
+  /* 下拉菜单项高度适配 */
+  van-dropdown-item__content {
+    height: auto !important;
+  }
+
+/* 修改下拉菜单标题字体大小 */
+.van-dropdown-menu__title {
+    font-size: 14px !important; /* 根据需求调整大小 */
+    color:#0e424d !important;
+  }
+  
+  /* 修改下拉菜单选项的字体大小 */
+  .van-dropdown-item__option {
+    font-size: 14px !important; /* 根据需求调整大小 */
+    color:#0e424d !important;
+  }
+  .select{
+      display: flex;
+      width: 100%;
+      background-color: white;
+  }
+  .drop-down{
+      width: 80%;
+      background-color: white;
+  }
+  .export{
+      width:20%;
+      display: flex;
+      background-color: white;
+  }
+  .img-export {
+    width: 40rpx;
+    height: 40rpx;
+    margin-top: 30rpx;
+  }
+  .text-export{
+    font-size: 14px;
+    color:#0e424d;
+    margin-left: 10rpx;
+    margin-top: 30rpx;
+  }
+
+  

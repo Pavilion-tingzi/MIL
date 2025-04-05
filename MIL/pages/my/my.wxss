@@ -1,0 +1,140 @@
+.head{
+    background-color: #75e4ef;
+    width: 100%;
+    height: 200rpx;
+    display: flex;
+    flex-direction: column;
+}
+.invite{
+    height: 40rpx;
+    display:flex;
+    justify-content: flex-end;
+}
+.profile{
+    display: flex;
+    justify-content: flex-start;
+    height: 100%;
+    align-items: center;
+}
+.invite-img{
+    height: 12rpx;
+    width: 12rpx;
+    margin-top: 20rpx;
+}
+.invite-txt{
+    font-size: 12px;
+    color: #0e424d;
+    margin-top: 20rpx;
+    margin-right: 30rpx;
+    font-weight: bold;
+}
+.profile-img{
+    width: 100rpx;
+    height: 100rpx;
+    margin-left: 70rpx;
+}
+.profile-name{
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 20rpx;
+    margin-right: 50rpx;
+    color: #0e424d;
+}
+.profile-btn{
+    color: #0e424d;
+    margin-right: 20rpx;
+    font-size: 14px;
+}
+.group{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-left: 50rpx;
+    margin-right: 50rpx;
+}
+.group-member{
+    display: flex;
+    flex-direction: row;
+}
+.mb{
+    display: flex;
+    flex-direction: column;
+    margin-left: 20rpx;
+    margin-top: 40rpx;
+    align-items: center;
+}
+.mb-pf{
+    position: relative;
+    width: 100rpx;
+    height: 100rpx;
+    margin-bottom: 10rpx;
+}
+.mb-pf-img{
+    width: 100%;
+    height: 100%;
+}
+.mb-delete-img{
+    position: absolute;  /* 绝对定位 */
+    bottom: 70rpx;       /* 距离底部 20rpx */
+    right: 0rpx;        /* 距离右侧 20rpx */
+    width: 30rpx;       /* 上层图片宽度 */
+    height: 30rpx;      /* 上层图片高度 */
+}
+.group-title{
+    margin-left: 20rpx;
+    color: #0e424d;
+    font-weight: bold;
+}
+.mb-name{
+    color: #0e424d;
+    font-size: 14px;
+}
+.add-group-member{
+    width: 100rpx;
+    height: 100rpx;
+    margin-left: 20rpx;
+    margin-top: 40rpx;
+}
+.config{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-left: 50rpx;
+    margin-right: 50rpx;
+}
+.config-title{
+    display: flex;
+    width: 100%;
+}
+.config-title-txt{
+    width: 70%;
+    margin-left: 20rpx;
+    color: #0e424d;
+    font-weight: bold;
+}
+.add-config{
+    color: #0e424d;
+}
+.config-list{
+    display: flex;
+    flex-direction: column;
+    margin-top: 30rpx;
+}
+.config-list-content{
+    display: flex;
+    width: 100%;
+    margin-top:10rpx;
+    margin-left: 20rpx;
+    align-items: center;
+}
+.config-txt{
+    width: 65%;
+    color: #0e424d;
+    font-size: 14px;
+}
+.config-mdf{
+    width: 50rpx;
+    height: 50rpx;
+    margin-left: 10rpx;
+}
+

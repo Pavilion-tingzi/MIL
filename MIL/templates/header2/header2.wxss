@@ -1,0 +1,7 @@
+.header2{
+    display: flex;
+}
+.img{
+    height: 200rpx;
+    width: 100%;
+}
