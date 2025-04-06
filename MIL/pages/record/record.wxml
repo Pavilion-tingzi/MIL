@@ -4,7 +4,7 @@
   <template is="header" data="{{ title: '记一笔' }}" />
   <view class="container">
     <!-- 选择计入的内容类别 -->
-    <text>我是dev分支V2</text>
+    <text>我是dev分支new-1</text>
     <view class="selects">
         <van-radio-group value="{{ radio }}" direction="horizontal" bind:change="onChange_radio" custom-class="custom-radio-group">
             <van-radio use-icon-slot value="{{ radio }}" name="1" custom-class="custom-radio">
