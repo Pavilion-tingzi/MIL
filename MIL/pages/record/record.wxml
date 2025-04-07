@@ -4,8 +4,6 @@
   <template is="header" data="{{ title: '记一笔' }}" />
   <view class="container">
     <!-- 选择计入的内容类别 -->
-    <text>我是dev分支V2</text>
-    <text>dev分支v3</text>
     <view class="selects">
         <van-radio-group value="{{ radio }}" direction="horizontal" bind:change="onChange_radio" custom-class="custom-radio-group">
             <van-radio use-icon-slot value="{{ radio }}" name="1" custom-class="custom-radio">
@@ -19,10 +17,37 @@
             </van-radio>
         </van-radio-group>
     </view>
-    <view class="inputs">
-        <van-divider />
-        
+    <view class="inputs-group">
+        <view class="inputs" hidden="{{!formShow1}}">
+            <van-divider />
+            <van-cell-group>
+                <van-field model:value="{{ formData1.expense }}" placeholder="请输入支出金额" label="支出金额" data-field="expense" data-form="1" bind:change="onInputChange" />
+                <van-field model:value="{{ formData1.date }}" placeholder="请输入日期" label="日期" data-field="date" data-form="1" bind:change="onInputChange" />
+                <van-field model:value="{{ formData1.class }}" placeholder="请输入类别" label="类别" data-field="class" data-form="1" bind:change="onInputChange" />
+                <van-field model:value="{{ formData1.notes }}" placeholder="请输入备注" label="备注" data-field="notes" data-form="1" bind:change="onInputChange" />
+            </van-cell-group>
+            <image class="btn-img" src="/images/icon/confirm.png" bind:tap="onSubmit"/>
+        </view>
+        <view class="inputs" hidden="{{!formShow2}}">
+            <van-divider />
+            <van-cell-group>
+                <van-field model:value="{{ formData2.income }}" placeholder="请输入收入金额" label="收入金额" data-field="income" data-form="2" bind:change="onInputChange" />
+                <van-field model:value="{{ formData2.date }}" placeholder="请输入日期" label="日期" data-field="date" data-form="2" bind:change="onInputChange" />
+                <van-field model:value="{{ formData2.class }}" placeholder="请输入类别" label="类别" data-field="class" data-form="2" bind:change="onInputChange" />
+                <van-field model:value="{{ formData2.notes }}" placeholder="请输入备注" label="备注" data-field="notes" data-form="2" bind:change="onInputChange" />
+            </van-cell-group>
+            <image class="btn-img" src="/images/icon/confirm.png" bind:tap="onSubmit"/>
+        </view>
+        <view class="inputs" hidden="{{!formShow3}}">
+            <van-divider />
+            <van-cell-group>
+                <van-field model:value="{{ formData3.value }}" placeholder="请输入物品估值" label="物品估值" data-field="value" data-form="3" bind:change="onInputChange" />
+                <van-field model:value="{{ formData3.date }}" placeholder="请输入日期" label="日期" data-field="date" data-form="3" bind:change="onInputChange" />
+                <van-field model:value="{{ formData3.name }}" placeholder="请输入物品名称" label="物品名称" data-field="name" data-form="3" bind:change="onInputChange" />
+                <van-field model:value="{{ formData3.num_months }}" placeholder="请输入折旧月数" label="折旧月数" data-field="num_months" data-form="3" bind:change="onInputChange" />
+            </van-cell-group>
+            <image class="btn-img" src="/images/icon/confirm.png" bind:tap="onSubmit"/>
+        </view>
     </view>
-    <image class="btn-img" src="/images/icon/confirm.png" />
   </view>
 </view>
