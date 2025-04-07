@@ -1,7 +1,7 @@
 <!-- templates/header.wxml -->
 <template name="header">
   <view class="header1"> 
-    <image class="search" src="/images/icon/search.png" />
+    <image class="search" src="/images/icon/search.png" bind:tap="onClickSearch" />
     <image class="img" src="/images/background/header.png" />
   </view>
 </template>

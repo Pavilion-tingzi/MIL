@@ -1,16 +1,55 @@
 <view>
 <!-- 头部 -->
+<van-toast id="van-toast" />
 <view class="head">
     <view class="invite">
         <image class="invite-img" wx:if="{{has_news}}" src="{{news_icon}}" />
-        <text class="invite-txt">邀请消息</text>
+        <text class="invite-txt" bind:tap="openInviteList">邀请消息</text>
+        <van-popup show="{{ inviteShow }}" closeable position="top" custom-style="height: 30%" bind:close="onClose" >
+            <view class="pop-contents">
+                <text class="pop-title">邀请消息</text>
+                <view class="pop-lists">
+                    <view class="pop-content" wx:for="{{inviteNews}}" wx:if="{{!item.ignore}}">
+                        <text class="content-txt">{{item.inviter}}邀请您加入团队</text>
+                        <text class="content-confirm" bind:tap="confirmInvite">接受</text>
+                        <text class="content-ignore" data-index="{{index}}" bind:tap="ignoreInvite">忽略</text>
+                    </view>
+                </view>
+            </view>
+        </van-popup>
+        <text class="invite-txt" bind:tap="onLogoff">注销</text>
     </view>
     <view class="profile">
         <image class="profile-img" src="{{profile_icon}}"></image>
         <text class="profile-name">{{my_name}}</text>
-        <text class="profile-btn">查看唯一码</text>
-        <text class="profile-btn">修改密码</text>
-        <text class="profile-btn" bind:tap="redirectToPage">注销</text>
+        <text class="profile-btn" bind:tap="getUniqueNum">查看唯一码</text>
+        <!-- 查看唯一码弹窗 -->
+        <view wx:if="{{showUniqueNum}}" class="modal-mask">
+            <view class="modal-container">
+                <view class="modal-content" bind:tap="copyText">
+                    {{my_uniqueNum}}
+                    <view class="copy-hint">点击文字可复制</view>
+                </view>
+            <view class="modal-footer">
+                <button bind:tap="hideModal" class="confirm-btn">确认</button>
+            </view>
+            </view>
+        </view>
+        <text class="profile-btn" bind:tap="showResetPsd">修改密码</text>
+        <!-- 修改密码弹窗 -->
+        <van-popup show="{{ showResetPsd }}" closeable position="bottom" custom-style="height: 40%" bind:close="onClose">
+            <view class="pop-contents">
+                <text class="pop-title">修改密码</text>
+                <view class="pop-inputs">
+                    <van-cell-group>
+                        <van-field value="{{newPsd}}" type="password" required label="设置密码" placeholder="请输入密码" data-field="newPsd" bind:change="onChange" />
+                        <van-field value="{{newPsdRpd}}" type="password" label="确认密码" placeholder="请再次输入密码" required data-field="newPsdRpd" bind:change="onChange" />
+                    </van-cell-group>
+                </view>
+                <image class="pop-btn-confirm" src="/images/icon/btn_confirm.png" bind:tap="onResetPsd" />
+            </view>
+        </van-popup>
+        <text class="profile-btn" bind:tap="redirectToPage">类别维护</text>
     </view>
 </view>
 <!-- 团队成员 -->
@@ -21,11 +60,28 @@
         <view class="mb"  wx:for="{{group_members}}">
             <view class="mb-pf">
                 <image class="mb-pf-img" src="{{item.mb_icon}}" />
-                <image class="mb-delete-img" src="{{item.mb_delete_icon}}" />
+                <!--删除成员-->
+                <image class="mb-delete-img" src="{{item.mb_delete_icon}}" data-index="{{index}}" bind:tap="onDeletMember" />
             </view>
             <text class="mb-name">{{item.mb_name}}</text>
         </view>
-        <image class="add-group-member" src="{{add_gpmb_icon}}" />
+        <!--邀请成员加入团队-->
+        <image class="add-group-member" src="{{add_gpmb_icon}}" bind:tap="issueInvite" />
+        <van-popup show="{{ showIssueInvite }}" closeable round bind:close="onClose">
+            <view class="issue-pop-contents">
+                <text class="pop-title">发出邀请</text>
+                <view class="pop-inputs">
+                    <van-cell-group>
+                        <van-field value="{{inviteName}}" required label="昵称" placeholder="请输入被邀请人昵称" data-field="inviteName" bind:change="onChange" />
+                        <van-field value="{{inviteUniqueNum}}" label="唯一码" placeholder="请输入被邀请人唯一码" required data-field="inviteUniqueNum" bind:change="onChange" />
+                    </van-cell-group>
+                </view>
+                <view class="pop-btns">
+                    <text class="pop-btn-cancel" bind:tap="onClose">取消</text>
+                    <text class="pop-btn-confirm1" bind:tap="onSentInvite">确认发出</text>
+                </view>
+            </view>
+        </van-popup>
     </view>
     <van-divider />
 </view>
@@ -34,7 +90,19 @@
     <van-divider />
     <view class="config-title">
         <text class="config-title-txt">我的设置:</text>
-        <text class="add-config">添加</text>
+        <text class="add-config" bind:tap="onShowConfig">添加</text>
+        <van-popup show="{{ showConfig }}" closeable position="bottom" custom-style="height: 60%" bind:close="onClose">
+            <view class="pop-contents">
+                <text class="pop-title">新增设置</text>
+                <view class="pop-inputs">
+                    <van-cell-group>
+                        <van-field value="{{newPsd}}" label="名称" placeholder="请输入设置项目的名称，如工资" data-field="newPsd" bind:change="onChange" />
+                        <van-field value="{{newPsdRpd}}" type="password" label="确认密码" placeholder="请再次输入密码" required data-field="newPsdRpd" bind:change="onChange" />
+                    </van-cell-group>
+                </view>
+                <image class="pop-btn-confirm" src="/images/icon/btn_confirm.png" bind:tap="onResetPsd" />
+            </view>
+        </van-popup>
     </view>
     <view class="config-list">
         <view class="config-list-content" wx:for="{{configs}}">

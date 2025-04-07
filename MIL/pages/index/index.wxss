@@ -107,3 +107,25 @@
 .action-btn:active {
     opacity: 0.8;
 }
+/* 搜索页传来的类别数据 */
+.selects{
+    display: flex;
+    margin: 20rpx 20rpx 20rpx 20rpx;
+    flex-wrap: wrap;
+}
+.selects-txt{
+    margin-left: 20rpx;
+    margin-bottom: 10rpx;
+    color: #9f8801;
+    background-color: #f9f4a6;
+    padding: 5rpx 15rpx 5rpx 15rpx;
+    border-radius: 10%;
+}
+.new-selects{
+    margin-left: 20rpx;
+    margin-bottom: 10rpx;
+    color: #9f3301;
+    background-color: #f9bda6;
+    padding: 5rpx 15rpx 5rpx 15rpx;
+    border-radius: 10%;
+}

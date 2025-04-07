@@ -14,6 +14,38 @@
     margin-bottom: 40rpx;
 }
 .btn-img{
+    width: 400rpx;
+    height: 80rpx;
+    margin-top: 200rpx;
+}
+.inputs{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.pop-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.pop-title{
+    font-size: large;
+    font-weight: bold;
+    margin-top: 20rpx;
+    margin-bottom: 20rpx;
+}
+.pop-btn-confirm{
     width: 500rpx;
-    height: 100rpx;
+    height: 90rpx;
+    margin-top: 50rpx;
+}
+.am-btns{
+    display: flex;
+    align-items: center;
+}
+.pop-btn-rewrite{
+    margin-top: 50rpx;
+    color: #542b02;
+    font-size: medium;
+    padding: 15rpx 30rpx;
 }

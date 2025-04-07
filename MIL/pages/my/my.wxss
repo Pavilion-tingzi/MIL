@@ -137,4 +137,130 @@
     height: 50rpx;
     margin-left: 10rpx;
 }
-
+.pop-contents{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.pop-title{
+    font-size: large;
+    font-weight: bold;
+    margin-top: 20rpx;
+    margin-bottom: 20rpx;
+}
+.pop-lists{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.pop-content{
+    display: flex;
+    margin-left: 40rpx;
+    margin-right: 40rpx;
+    margin-top: 20rpx;
+}
+.content-txt{
+    width: 65%;
+}
+.content-confirm{
+    margin-right: 20rpx;
+    padding: 5rpx 10rpx;
+    background-color: #75e4ef;
+    color: #0e424d;
+    border-radius: 10%;
+}
+.content-ignore{
+    margin-right: 20rpx;
+    padding: 5rpx 10rpx;
+    background-color: #ff8f1f;
+    color: #542b02;
+    border-radius: 10%;
+}
+/* 触发按钮样式 */
+.show-modal-btn {
+    margin-top: 40rpx;
+  }
+  
+  /* 模态框遮罩层 */
+  .modal-mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  
+  /* 模态框容器 */
+  .modal-container {
+    width: 80%;
+    background-color: #fff;
+    border-radius: 10rpx;
+    overflow: hidden;
+  }
+  
+  /* 模态框内容区域 */
+  .modal-content {
+    padding: 40rpx;
+    text-align: center;
+    font-size: 32rpx;
+    color: #333;
+    border-bottom: 1rpx solid #eee;
+  }
+  
+  /* 复制提示文字 */
+  .copy-hint {
+    font-size: 24rpx;
+    color: #999;
+    margin-top: 20rpx;
+  }
+  
+  /* 模态框底部按钮区域 */
+  .modal-footer {
+    display: flex;
+    justify-content: center;
+    padding: 20rpx;
+  }
+  
+  /* 确认按钮样式 */
+  .confirm-btn {
+    width: 200rpx;
+    background-color: #07c160;
+    color: white;
+  }
+  .pop-btn-confirm{
+    width: 500rpx;
+    height: 90rpx;
+    margin-top: 40rpx;
+}
+.issue-pop-contents{
+    width: 600rpx;
+    height: 400rpx;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.pop-btns{
+    display: flex;
+    align-items: center;
+    margin-top: 40rpx;
+}
+.pop-btn-cancel{
+    margin: 0rpx 40rpx;
+    padding:10rpx 30rpx 10rpx 30rpx;
+    background-color: #e6e6e6;
+    border-radius: 10%;
+    color: #bfbfbf;
+}
+.pop-btn-confirm1{
+    margin: 0rpx 40rpx;
+    padding:10rpx 30rpx 10rpx 30rpx;
+    background-color: #f9f4a6;
+    border-radius: 10%;
+    color: #9f8801;
+}
