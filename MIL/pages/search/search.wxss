@@ -1,0 +1,71 @@
+@import "/templates/header2/header2.wxss";
+.class-lists{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 200rpx;
+}
+.class-list{
+    display: flex;
+    flex-direction: column;
+    margin-left: 40rpx;
+    margin-right: 40rpx;
+    margin-top: 40rpx;
+}
+.small-class{
+    display: flex;
+    margin-left: 20rpx;
+}
+.small-class-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 40rpx;
+    margin-top: 40rpx;
+}
+.small-class-content.active {
+    background-color: #f0f0f0;
+    border: 1px solid #9d8e01;
+    padding: 5rpx 5rpx 5rpx 5rpx;
+}
+.small-class-img{
+    width: 60rpx;
+    height: 60rpx;
+}
+.small-class-txt{
+    font-size: 14px;
+    margin-top: 5rpx;
+    color: #0e424d;
+}
+.big-class{
+    font-size: 16px;
+    color: #0e424d;
+    background-color: #75e4ef;
+    width: fit-content;
+    padding: 5rpx 15rpx 5rpx 15rpx;
+    border-radius: 10%;
+}
+.big-class.hidden{
+    font-size: 16px;
+    color: #0e424d;
+    background-color: #fff;
+    width: fit-content;
+    padding: 3rpx 13rpx 3rpx 13rpx;
+    border-radius: 10%;
+    border: 2px solid #75e4ef;
+}
+.confirm{
+    position: fixed;
+    bottom: 30rpx;
+    left: 50%;                  /* 定位到水平中点 */
+    transform: translateX(-50%); /* 向左移动自身宽度的一半 */
+    z-index: 9999;
+}
+.confirm-img{
+    width: 400rpx;
+    height: 80rpx;
+    margin-top: 200rpx;
+}
+.van-search__action {
+    margin-right: 40rpx !important; /* 调整这个值控制间距 */
+    margin-left: 20rpx !important;
+}

@@ -1,5 +1,6 @@
 import dropdownTemplate from '../../templates/dropdown/dropdown';
 import * as echarts from '../../components/ec-canvas/echarts';
+import headerTemplate from '../../templates/header/header';
 
 function initChart(canvas, width, height,prd) {
     console.log("开始进行initChart");  
@@ -56,7 +57,8 @@ Page({
           {cell_id: '1',
            cell_date: '03-02 星期五',
            cell_date_values: [
-               {cell_icon: '/images/icon/bc_transport.png',
+               {
+                cell_icon: '/images/icon/bc_transport.png',
                 cell_price: '￥9.99',
                 cell_class: '交通-公交',
                 cell_tag: '已摊销',
@@ -162,10 +164,15 @@ Page({
       ec: {
         onInit: initChart
       },
-        //统计表中的系数，恩格尔系数等
+      //统计表中的系数，恩格尔系数等
       factor: "恩格尔系数0.8，中产",
+      //搜索页面传来的搜索条件
+      selectedData_sid:"",
+      selectedData_sname:"",
+      selectedData_notes:"",
     },
-    ...dropdownTemplate.methods,  
+    ...dropdownTemplate.methods, 
+    ...headerTemplate.methods, 
     onLoad() {
         // 确保Vant组件初始化
         setTimeout(() => {
@@ -182,7 +189,7 @@ Page({
                 showChart: event.detail.index === 1
             });
           }
-      },
+    },
     onChange_radio(event) {
         this.setData({
           radio: event.detail,
@@ -195,6 +202,32 @@ Page({
         wx.navigateTo({
             url: '/pages/record/record'
           });
+    },
+    //接收搜索页面传来的确认搜索参数
+    setSelectedData: function(sid,sname,notes) {
+        if (sname.length===0){
+            this.setData({
+                selectedData_sid: "",
+                selectedData_notes: notes,
+                selectedData_sname: notes,
+              });
+        } else{
+            this.setData({
+                selectedData_sid: sid,
+                selectedData_sname: sname,
+                selectedData_notes: "",
+              });
+        }
+        console.log("这里：",this.data.selectedData_sname)
+        // 这里可以执行其他数据处理逻辑
+      },
+    //取消选择
+    deSelect(){
+        this.setData({
+            selectedData_sid: "",
+            selectedData_sname: "",
+            selectedData_notes: "",
+        })
     }
   });
 

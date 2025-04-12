@@ -14,6 +14,12 @@
     margin-bottom: 40rpx;
 }
 .btn-img{
-    width: 500rpx;
-    height: 100rpx;
+    width: 400rpx;
+    height: 80rpx;
+    margin-top: 200rpx;
+}
+.inputs{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

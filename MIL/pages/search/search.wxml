@@ -1,0 +1,30 @@
+<import src="/templates/header2/header2.wxml" />
+
+<view>
+    <template is="header" data="{{ title: '搜索' }}" />
+    <van-tabs active="{{ active }}" bind:change="onChange" title-active-color="#9d8e01" color="#9d8e01">
+        <van-tab title="按类别">
+            <view class="class-lists">
+                <view class="class-list" wx:for="{{class}}" wx:key="id" wx:for-index="bigIndex">
+                    <text class="big-class {{item.hidden ? 'hidden':''}}" bind:tap="hidSmallClass" data-bindex="{{bigIndex}}">{{item.bigClass}}</text>
+                    <view class="small-class" hidden="{{item.hidden}}">
+                        <view class="small-class-content {{item.selected ? 'active' : ''}}" wx:for="{{item.smallClass}}" wx:key="sid" data-sid="{{item.sid}}" data-sClassName="{{item.sClassName}}" data-big-index="{{bigIndex}}" data-small-index="{{index}}" bind:tap="onSelect">
+                            <image class="small-class-img" src="{{item.sClassSrc}}" />
+                            <text class="small-class-txt">{{item.sClassName}}</text>
+                        </view>
+                        
+                    </view>
+                </view>
+            </view>
+            <view class="confirm">
+                <image class="confirm-img" src="/images/icon/btn_search_confirm.png" bind:tap="confirmSearch" />
+            </view>
+        </van-tab>
+
+        <van-tab title="按备注">
+            <van-search value="{{ value }}" placeholder="请输入搜索关键词" use-action-slot bind:change="onChange">
+                <view slot="action" bind:tap="onClick">搜索</view>
+            </van-search>
+        </van-tab>
+    </van-tabs>
+</view>

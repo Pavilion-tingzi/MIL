@@ -4,7 +4,10 @@
     <template is="header" data="{{ title: '首页' }}" />
     <!-- 页面其他内容 -->
     <template is="dropdown" data="{{...dropdown1}}" />
-
+    <view class="selects" hidden="{{selectedData_sname.length === 0}}">
+        <text class="selects-txt"  wx:for="{{selectedData_sname}}">{{item}}</text>
+        <text class="new-selects" bind:tap="deSelect">取消选择</text>
+    </view>
     <van-tabs active="{{ active }}" bind:change="onChange" title-active-color="#9d8e01" color="#9d8e01">
         <van-tab title="明细表">
             <!-- 明细列表 -->

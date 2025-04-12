@@ -5,6 +5,8 @@
         "pages/profit/profit",
         "pages/my/my",
         "pages/record/record",
+        "pages/selectclass/selectclass",
+        "pages/search/search",
         "templates/header2.wxml",
         "templates/drawdown/draw_down.wxml"
     ],
@@ -58,6 +60,8 @@
         "van-popup": "@vant/weapp/popup/index",
         "van-field": "@vant/weapp/field/index",
         "van-checkbox": "@vant/weapp/checkbox/index",
-        "van-checkbox-group": "@vant/weapp/checkbox-group/index"
+        "van-checkbox-group": "@vant/weapp/checkbox-group/index",
+        "van-cascader": "@vant/weapp/cascader/index",
+        "van-search": "@vant/weapp/search/index"
     }
 }

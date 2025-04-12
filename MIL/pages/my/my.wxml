@@ -4,13 +4,14 @@
     <view class="invite">
         <image class="invite-img" wx:if="{{has_news}}" src="{{news_icon}}" />
         <text class="invite-txt">邀请消息</text>
+        <text class="invite-txt">注销</text>
     </view>
     <view class="profile">
         <image class="profile-img" src="{{profile_icon}}"></image>
         <text class="profile-name">{{my_name}}</text>
         <text class="profile-btn">查看唯一码</text>
         <text class="profile-btn">修改密码</text>
-        <text class="profile-btn" bind:tap="redirectToPage">注销</text>
+        <text class="profile-btn" bind:tap="redirectToPage">类别维护</text>
     </view>
 </view>
 <!-- 团队成员 -->
