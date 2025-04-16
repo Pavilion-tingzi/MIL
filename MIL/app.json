@@ -7,6 +7,7 @@
         "pages/record/record",
         "pages/selectclass/selectclass",
         "pages/search/search",
+        "pages/editclass/editclass",
         "templates/header2.wxml",
         "templates/drawdown/draw_down.wxml"
     ],

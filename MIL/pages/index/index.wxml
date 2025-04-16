@@ -11,7 +11,7 @@
     <van-tabs active="{{ active }}" bind:change="onChange" title-active-color="#9d8e01" color="#9d8e01">
         <van-tab title="明细表">
             <!-- 明细列表 -->
-            <view class="content" wx:for="{{cell_values}}" wx:key="cell_id">
+            <view class="content" wx:for="{{cell_values}}" wx:for-index="bigIndex" wx:key="cell_id">
                     <van-cell-group title="{{item.cell_date}}">
                         <van-swipe-cell right-width="{{ 130 }}" wx:for="{{item.cell_date_values}}">
                             <van-cell value="{{item.cell_price}}" icon="{{item.cell_icon}}">
@@ -25,13 +25,26 @@
                                     </view>
                                 </view>
                             </van-cell>
+                            <!--修改和删除按钮-->
                             <view slot="right" class="swipe-actions">
-                                <view class="action-btn edit-btn" bindtap="onEdit" data-id="{{item.id}}">修改</view>
-                                <view class="action-btn delete-btn" bindtap="onDelete" data-id="{{item.id}}">删除</view>
+                                <view class="action-btn edit-btn" data-id="{{item.id}}" data-big-index="{{bigIndex}}" data-small-index="{{index}}" bind:tap="showModify">修改</view>
+                                <view class="action-btn delete-btn" bindtap="onDelete" data-id="{{item.id}}" data-big-index="{{bigIndex}}" data-small-index="{{index}}">删除</view>
                             </view>
                         </van-swipe-cell>     
                     </van-cell-group>    
             </view>
+            <!--修改弹窗-->
+            <van-popup show="{{ showModify }}" closeable position="bottom" custom-style="height: 70%" overlay-style="background-color: rgba(0, 0, 0, 0.3);" bind:close="onClose">
+                <view class="pop-contents">
+                    <text class="pop-title">增加小类</text>
+                    <view class="pop-inputs">
+                        <van-cell-group>
+                            <van-field value="{{addSmallClass.sClassName}}" label="小类名称" placeholder="请输入小类名称" data-field="addSmallClass.sClassName" bind:change="onChange" />
+                        </van-cell-group>
+                    </view>
+                    <image class="pop-btn-confirm" src="/images/icon/btn_confirm.png" bind:tap="onASClassConfirm" />
+                </view>
+            </van-popup>
             <!-- 悬浮按钮（记一笔） -->
             <view class="float-button" wx:if="{{active === 0}}" bind:tap="switchToRecord">
                 <image src="/images/icon/writebutton.png" mode="aspectFit" ></image>

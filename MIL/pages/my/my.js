@@ -75,7 +75,22 @@ Page({
             cf_class:"支付"
         }
     ],
-    showConfig:false,
+    showAddConfig:false,
+    showMdyConfig:false,
+    newConfig: {
+        cf_name: '',
+        cf_account: '',
+        cf_date: '',
+        cf_class: ''
+    },
+    mdyConfig:{
+        cf_name: '',
+        cf_account: '',
+        cf_date: '',
+        cf_class: ''
+    },
+    mdyConfigIndex:"",
+    radio:"1",
     //修改密码
     showResetPsd:false,
     //发出邀请
@@ -116,7 +131,8 @@ Page({
         inviteShow: false,
         showResetPsd: false,
         showIssueInvite:false,
-        showConfig:false,
+        showAddConfig:false,
+        showMdyConfig:false,
     })
   },
   ignoreInvite(e){
@@ -164,10 +180,10 @@ Page({
   onChange(e){
       const {field} = e.currentTarget.dataset;
       const value = e.detail;
-      console.log(field,value)
+      console.log(field,value);
       this.setData({
           [`${field}`]:value,
-      })
+      });
   },
   //修改密码弹窗中点击确认的逻辑
   onResetPsd(){
@@ -230,5 +246,83 @@ Page({
           }
         }
     });
+  },
+  onShowAddConfig(){
+    this.setData({
+        showAddConfig:true
+    });
+  },
+  onNewConfig(){
+    const { cf_name, cf_account, cf_date, cf_class } = this.data.newConfig;
+    
+    // 简单验证
+    if (!cf_name || !cf_account || !cf_date || !cf_class) {
+      wx.showToast({
+        title: '请填写完整信息',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    // 添加到配置列表
+    const newConfigs = [...this.data.configs, this.data.newConfig];
+    this.setData({
+      configs: newConfigs,
+      showAddConfig:false,
+      newConfig: {},
+    });
+    
+    wx.showToast({
+      title: '添加成功',
+      icon: 'success'
+    });
+    
+    // 这里可以添加保存到本地或服务器的逻辑
+    console.log('当前配置项:', newConfigs);
+  },
+  onDeleteConfig(e){
+    const index = e.currentTarget.dataset.index;
+    wx.showModal({
+        title: '确认删除',
+        content: `确定要删除这条配置吗？`,
+        success: (res) => {
+          if (res.confirm) {
+            // 用户点击了确定，还需要补充后端数据库操作
+            this.setData({
+                configs: this.data.configs.filter((item,i) => i !== index)
+            });
+            // 显示操作成功提示
+            wx.showToast({
+                title: '删除成功',
+                icon: 'success',
+                duration: 1500
+            });
+          } else if (res.cancel) {
+            // 用户点击了取消，什么都不做
+          }
+        }
+    });
+  },
+  //弹出修改设置的对话框
+  onModifyConfig(e){
+    const index = e.currentTarget.dataset.index;
+    this.setData({
+        showMdyConfig:true,
+        mdyConfig:this.data.configs[index],
+        mdyConfigIndex:index,
+    });
+  },
+  //确认修改
+  onMdyConfig(){
+    const index = this.data.mdyConfigIndex;
+    this.setData({
+        [`configs[${index}]`]:this.data.mdyConfig
+    });
+    this.onClose();
+  },
+  toAddClass(){
+      wx.navigateTo({
+        url: '/pages/editclass/editclass',
+      })
   }
 })

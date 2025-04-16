@@ -49,7 +49,7 @@
                 <image class="pop-btn-confirm" src="/images/icon/btn_confirm.png" bind:tap="onResetPsd" />
             </view>
         </van-popup>
-        <text class="profile-btn" bind:tap="redirectToPage">类别维护</text>
+        <text class="profile-btn" bind:tap="redirectToPage" bind:tap="toAddClass">类别维护</text>
     </view>
 </view>
 <!-- 团队成员 -->
@@ -90,25 +90,47 @@
     <van-divider />
     <view class="config-title">
         <text class="config-title-txt">我的设置:</text>
-        <text class="add-config" bind:tap="onShowConfig">添加</text>
-        <van-popup show="{{ showConfig }}" closeable position="bottom" custom-style="height: 60%" bind:close="onClose">
+        <text class="add-config" bind:tap="onShowAddConfig">添加</text>
+        <van-popup show="{{ showAddConfig }}" closeable position="bottom" custom-style="height: 60%" bind:close="onClose">
             <view class="pop-contents">
                 <text class="pop-title">新增设置</text>
                 <view class="pop-inputs">
                     <van-cell-group>
-                        <van-field value="{{newPsd}}" label="名称" placeholder="请输入设置项目的名称，如工资" data-field="newPsd" bind:change="onChange" />
-                        <van-field value="{{newPsdRpd}}" type="password" label="确认密码" placeholder="请再次输入密码" required data-field="newPsdRpd" bind:change="onChange" />
+                        <van-field value="{{newConfig.cf_name}}" label="名称" placeholder="请输入项目名称，如工资" data-field="newConfig.cf_name" bind:change="onChange" />
+                        <van-field value="{{newConfig.cf_account}}" label="金额" placeholder="请输入单笔金额" data-field="newConfig.cf_account" bind:change="onChange" />
+                        <van-field value="{{newConfig.cf_date}}" label="发放/支付日" placeholder="请输入每月几号发放/支付" data-field="newConfig.cf_date" bind:change="onChange" />
+                        <van-radio-group value="{{ radio }}" direction="horizontal" data-field="newConfig.cf_class" bind:change="onChange" >
+                            <van-radio name="发放">发放</van-radio>
+                            <van-radio name="支付">支付</van-radio>
+                        </van-radio-group>
                     </van-cell-group>
                 </view>
-                <image class="pop-btn-confirm" src="/images/icon/btn_confirm.png" bind:tap="onResetPsd" />
+                <image class="pop-btn-confirm" src="/images/icon/btn_confirm.png" bind:tap="onNewConfig" />
             </view>
         </van-popup>
     </view>
     <view class="config-list">
         <view class="config-list-content" wx:for="{{configs}}">
             <text class="config-txt">{{item.cf_name}}：{{item.cf_account}}元，每月{{item.cf_date}}号{{item.cf_class}}</text>
-            <image class="config-mdf" src="/images/icon/modify.png" />
-            <image class="config-mdf" src="/images/icon/delete_2.png" />
+            <image class="config-mdf" src="/images/icon/modify.png" data-index="{{index}}" bind:tap="onModifyConfig" />
+            <van-popup show="{{ showMdyConfig }}" closeable position="bottom" custom-style="height: 60%" bind:close="onClose">
+                <view class="pop-contents">
+                    <text class="pop-title">修改设置</text>
+                    <view class="pop-inputs">
+                        <van-cell-group>
+                            <van-field value="{{mdyConfig.cf_name}}" label="名称" data-field="mdyConfig.cf_name" placeholder="请输入项目名称，如工资" bind:change="onChange" />
+                            <van-field value="{{mdyConfig.cf_account}}" data-field="mdyConfig.cf_account" label="金额" placeholder="请输入单笔金额" bind:change="onChange" />
+                            <van-field value="{{mdyConfig.cf_date}}" label="发放/支付日" data-field="mdyConfig.cf_date" placeholder="请输入每月几号发放/支付" bind:change="onChange" />
+                                <van-radio-group value="{{ mdyConfig.cf_class }}" data-field="mdyConfig.cf_class" direction="horizontal" bind:change="onChange" >
+                                    <van-radio name="发放">发放</van-radio>
+                                    <van-radio name="支付">支付</van-radio>
+                                </van-radio-group>
+                        </van-cell-group>
+                    </view>
+                    <image class="pop-btn-confirm" src="/images/icon/btn_confirm.png" data-index="{{index}}" bind:tap="onMdyConfig" />
+                </view>
+            </van-popup>
+            <image class="config-mdf" src="/images/icon/delete_2.png" data-index="{{index}}" bind:tap="onDeleteConfig" />
         </view>
     </view>
     <van-divider />

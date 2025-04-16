@@ -1,0 +1,8 @@
+{
+    "usingComponents": {},
+    "navigationBarTitleText": "编辑类别",
+    "navigationBarBackgroundColor": "#ffffff",
+    "backgroundColor": "#ffffff",
+    "backgroundTextStyle": "light",
+    "navigationBarTextStyle": "black"
+}

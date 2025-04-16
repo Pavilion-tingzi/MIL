@@ -170,6 +170,10 @@ Page({
       selectedData_sid:"",
       selectedData_sname:"",
       selectedData_notes:"",
+      //修改时存放索引
+      bigIndex:"",
+      smallIndex:"",
+      showModify:false,
     },
     ...dropdownTemplate.methods, 
     ...headerTemplate.methods, 
@@ -228,6 +232,46 @@ Page({
             selectedData_sname: "",
             selectedData_notes: "",
         })
-    }
+    },
+    //打开修改弹窗
+    showModify(e){
+        const {bigIndex,smallIndex} = e.currentTarget.dataset;
+        this.setData({
+            bigIndex:bigIndex,
+            smallIndex:smallIndex,
+            showModify:true,
+        })
+    },
+    onDelete(e){
+        const {bigIndex,smallIndex} = e.currentTarget.dataset;
+        // 显示确认弹窗
+        //增加判断逻辑：只能删除自己的记录
+        wx.showModal({
+            title: '确认删除',
+            content: `确定要删除这条记录吗？`,
+            success: (res) => {
+            if (res.confirm) {
+                // 用户点击了确定，还需要补充后端数据库操作
+                this.setData({
+                    [`cell_values[${bigIndex}].cell_date_values`]: this.data.cell_values[bigIndex].cell_date_values.filter((item,i) => i !== smallIndex)
+                });
+                // 显示操作成功提示
+                wx.showToast({
+                    title: '删除成功',
+                    icon: 'success',
+                    duration: 1500
+                });
+            } else if (res.cancel) {
+                // 用户点击了取消，什么都不做
+            }
+            }
+        });
+    },
+    //关闭弹窗
+    onClose(){
+        this.setData({
+            showModify:false,
+        })
+    },
   });
 
