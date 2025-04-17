@@ -7,17 +7,19 @@
     position: flex;
     justify-content: center;
     margin-top: 10rpx;
+    z-index: 1;
 }
 ec-canvas {
     display: flex;           /* 启用flex布局 */
     justify-content: center; /* 水平居中 */
-  }
-  .total_value{
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 40rpx;
-  }
+    z-index: 1;
+}
+.total_value{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40rpx;
+}
   .tv_1{
       font-size: larger;
       margin-bottom: 10rpx;

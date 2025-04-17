@@ -23,6 +23,10 @@
     justify-content: center; /* 水平居中 */
     z-index: 1;
   }
+  #mychart {
+    position: relative;
+    z-index: 1; /* 确保比下拉菜单低 */
+  }
   /* 悬浮按钮样式 */
 .float-button {
     position: fixed;

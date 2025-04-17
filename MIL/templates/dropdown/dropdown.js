@@ -15,6 +15,11 @@ const dropdownTemplate = {
     methods: {
         // 监听下拉菜单打开
         onDropdownOpen(e) {
+            // 不显示echart图
+            this.setData({
+                showChart:false,
+            });
+            
             // 直接操作DOM元素
             const query = wx.createSelectorQuery().in(this);
             query.select('#date-picker').fields({
@@ -31,14 +36,15 @@ const dropdownTemplate = {
             
             // 同时更新状态
             this.setData({
-                'dropdown1.showCalendar': true
+                'dropdown1.showCalendar': true,
             });
           },
     
       // 日历关闭时
       onCalendarClose() {
         this.setData({
-            'dropdown1.showCalendar': false
+            'dropdown1.showCalendar': false,
+            showChart:true,
         });
         const dropdownItem = this.selectComponent('#date-picker');
         if (dropdownItem) {
@@ -55,7 +61,8 @@ const dropdownTemplate = {
         this.setData({
             'dropdown1.selectedDates': [start, end],
             'dropdown1.dateRangeText': `${startStr} 至 ${endStr}`,
-            'dropdown1.showCalendar': true
+            'dropdown1.showCalendar': true,
+            showChart:true,
         });
 
         const dropdownItem = this.selectComponent('#date-picker');
@@ -68,6 +75,19 @@ const dropdownTemplate = {
       formatDate(date) {
         const d = new Date(date);
         return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+    },
+
+    //下拉时隐藏柱状图
+    hidCharts(){
+        this.setData({
+            showChart:false,
+        });
+    },
+    //选择选项后显示柱状图
+    showCharts(){
+        this.setData({
+            showChart:true,
+        });
     },
     }
 }

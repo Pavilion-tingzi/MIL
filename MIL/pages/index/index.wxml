@@ -36,7 +36,7 @@
             <!--修改弹窗-->
             <van-popup show="{{ showModify }}" closeable position="bottom" custom-style="height: 70%" overlay-style="background-color: rgba(0, 0, 0, 0.3);" bind:close="onClose">
                 <view class="pop-contents">
-                    <text class="pop-title">增加小类</text>
+                    <text class="pop-title">修改记录</text>
                     <view class="pop-inputs">
                         <van-cell-group>
                             <van-field value="{{addSmallClass.sClassName}}" label="小类名称" placeholder="请输入小类名称" data-field="addSmallClass.sClassName" bind:change="onChange" />
@@ -65,7 +65,7 @@
                 </text>
             </view>
             <view class="content-stat">
-                <view class="chart-container">
+                <view class="chart-container" hidden="{{!showChart}}">
                     <ec-canvas id="mychart" canvas-id="mychart" ec="{{ ec }}" style="width:100%;height:100%" wx:if="{{showChart}}"></ec-canvas >
                 </view>
                 <view class="list">

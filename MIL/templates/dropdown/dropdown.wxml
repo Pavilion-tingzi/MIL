@@ -6,7 +6,7 @@
                     <!-- 日历组件放在下拉项中 -->
                     <van-calendar show="{{showCalendar}}" type="range" min-date="{{minDate}}" max-date="{{maxDate}}" bind:close="onCalendarClose" bind:confirm="onCalendarConfirm" />
                 </van-dropdown-item>
-                <van-dropdown-item value="{{ value1 }}" options="{{ option1 }}" />
+                <van-dropdown-item value="{{ value1 }}" options="{{ option1 }}" bind:open="hidCharts" bind:closed="showCharts" />
             </van-dropdown-menu>
         </view>
         <view class="export">

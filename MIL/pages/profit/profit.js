@@ -107,6 +107,7 @@ Page({
         ec:{
             onInit: initChart,
         },
+        showChart:true,
         //总结余，总收入，总支出
         total_pf:"999.99",
         total_income:"999.99",
@@ -134,4 +135,5 @@ Page({
         ]
     },
     ...dropdownTemplate.methods, 
+
 })

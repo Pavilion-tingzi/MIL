@@ -62,13 +62,24 @@ Page({
                 cell_price: '￥9.99',
                 cell_class: '交通-公交',
                 cell_tag: '已摊销',
-                cell_belong: '@李四'
+                cell_belong: '@李四',
+                cell_type:'支出',
                 },
                 {
                 cell_icon: '/images/icon/sc_lunch.png',
                 cell_price: '￥4.30',
                 cell_class: '餐饮-午餐',
-                cell_belong: '@李四'
+                cell_belong: '@李四',
+                cell_tag: '',
+                cell_type:'支出',
+                },
+                {
+                cell_icon: '/images/icon/sc_lunch.png',
+                cell_price: '￥4.30',
+                cell_class: '工资',
+                cell_belong: '@李四',
+                cell_tag: '',
+                cell_type:'支出',
                 }
             ]
           },
@@ -79,13 +90,16 @@ Page({
                 cell_price: '￥10.01',
                 cell_class: '交通-公交',
                 cell_tag: '已摊销',
-                cell_belong: '@张三'
+                cell_belong: '@张三',
+                cell_type:'支出',
                 },
                 {
                 cell_icon: '/images/icon/sc_lunch.png',
                 cell_price: '￥5.13',
                 cell_class: '餐饮-午餐',
-                cell_belong: '@张三'
+                cell_belong: '@张三',
+                cell_tag: '',
+                cell_type:'支出',
                 }
             ]
           },
@@ -96,13 +110,16 @@ Page({
                 cell_price: '￥10.01',
                 cell_class: '交通-公交',
                 cell_tag: '已摊销',
-                cell_belong: '@张三'
+                cell_belong: '@张三',
+                cell_type:'支出',
                 },
                 {
                 cell_icon: '/images/icon/sc_lunch.png',
                 cell_price: '￥5.13',
                 cell_class: '餐饮-午餐',
-                cell_belong: '@张三'
+                cell_belong: '@张三',
+                cell_tag: '',
+                cell_type:'支出',
                 }
             ]
           },
@@ -113,13 +130,16 @@ Page({
                cell_price: '￥10.01',
                cell_class: '交通-公交',
                cell_tag: '已摊销',
-               cell_belong: '@张三'
+               cell_belong: '@张三',
+               cell_type:'支出',
                },
                {
                cell_icon: '/images/icon/sc_lunch.png',
                cell_price: '￥5.13',
                cell_class: '餐饮-午餐',
-               cell_belong: '@张三'
+               cell_belong: '@张三',
+               cell_tag: '',
+               cell_type:'支出',
                }
            ]
          },
@@ -160,7 +180,7 @@ Page({
         active_1:"/images/icon/st_button_income-o.png",
       },
         //统计表中的饼图
-      showChart: false,
+      showChart: true,
       ec: {
         onInit: initChart
       },
@@ -174,6 +194,15 @@ Page({
       bigIndex:"",
       smallIndex:"",
       showModify:false,
+      //修改时临时存放
+      mdyCellValue:{
+            cell_icon: '/images/icon/bc_transport.png',
+            cell_price: '',
+            cell_class: '',
+            cell_tag: '',
+            cell_belong: '',
+            cell_type:'',
+      }
     },
     ...dropdownTemplate.methods, 
     ...headerTemplate.methods, 
