@@ -9,12 +9,12 @@
         <text class="pop-title">用户登录</text>
         <view class="pop-inputs">
             <van-cell-group>
-                <van-field value="" required clearable label="用户名" placeholder="请输入用户名" />
-                <van-field value="" type="password" label="密码" placeholder="请输入密码" required />
+                <van-field value="{{username}}" required clearable label="用户名" placeholder="请输入用户名" data-field="username" bind:change="onChange" />
+                <van-field value="{{password}}" label="密码" type="password" data-field="password" placeholder="请输入密码" required bind:change="onChange"/>
             </van-cell-group>
         </view>
         <view class="pop-agreement">
-            <van-checkbox value="{{ checked }}" bind:change="onChange"></van-checkbox>
+            <van-checkbox value="{{ checked }}" bind:change="onCheck"></van-checkbox>
             <text class="pop-arm-txt">用户协议</text>
         </view>
         <image class="pop-btn-login" src="/images/icon/btn_login.png" bind:tap="onLogin" />

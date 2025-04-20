@@ -1,4 +1,6 @@
 import Toast from '@vant/weapp/toast/toast';
+import api from '../../config/settings'
+const { request, refreshToken, authRequest } = require('../../utils/request')
 
 Page({
   data: {
@@ -97,6 +99,9 @@ Page({
     showIssueInvite:false,
     inviteName:"",
     inviteUniqueNum:"",
+  },
+  onLoad(){
+    this.fetchUserInfo()
   },
   onReady(){
     this.toast = this.selectComponent('#van-toast');
@@ -324,5 +329,23 @@ Page({
       wx.navigateTo({
         url: '/pages/editclass/editclass',
       })
+  },
+  //获取页面数据，在onLoad函数中调用
+  async fetchUserInfo() {
+    try {
+      const res = await authRequest({
+        url: api.users,
+        method: 'GET'
+      })
+      console.log(res)
+      this.setData({
+        profile_icon:res.data.avatar,
+        my_name:res.data.nickname,
+        my_uniqueNum:res.data.unicode,
+      })
+    } catch (err) {
+      console.error('获取用户信息失败', err)
+      wx.showToast({ title: '获取信息失败', icon: 'none' })
+    }
   }
 })
