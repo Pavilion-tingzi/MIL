@@ -21,14 +21,15 @@
     </view>
 </van-popup>
 <!-- 注册弹出层 -->
-<van-popup show="{{ show_rg }}" closeable position="bottom" custom-style="height: 50%" bind:close="onClose">
+<van-popup show="{{ show_rg }}" closeable position="bottom" custom-style="height: 60%" bind:close="onClose">
     <view class="pop-content">
         <text class="pop-title">用户注册</text>
         <view class="pop-inputs">
             <van-cell-group>
-                <van-field value="" required clearable label="用户名" placeholder="请输入用户名" />
-                <van-field value="" type="password" label="密码" placeholder="请输入密码" required />
-                <van-field value="" type="password" label="确认密码" placeholder="请再次输入密码" required />
+                <van-field value="{{username_reg}}" required clearable label="用户名" placeholder="请输入用户名" data-field='username_reg' bind:change="onChange" />
+                <van-field value="{{nickname_reg}}" required clearable label="昵称" placeholder="请输入昵称" data-field='nickname_reg' bind:change="onChange" />
+                <van-field value="{{password_reg}}" type="password" label="密码" placeholder="请输入密码" required data-field='password_reg' bind:change="onChange" />
+                <van-field value="{{password_reg2}}" type="password" label="确认密码" placeholder="请再次输入密码" required data-field='password_reg2' bind:change="onChange" />
             </van-cell-group>
         </view>
         <view class="pop-agreement">

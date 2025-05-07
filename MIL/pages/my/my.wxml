@@ -20,7 +20,17 @@
         <text class="invite-txt" bind:tap="onLogoff">注销</text>
     </view>
     <view class="profile">
-        <image class="profile-img" src="{{profile_icon}}"></image>
+        <image class="profile-img" src="{{profile_icon}}" bind:tap="showChangeAvatar"></image>
+        <van-popup show="{{ showChangeAvatar }}" closeable round bind:close="onClose">
+            <view class="issue-pop-contents">
+                <text class="pop-title">修改头像</text>
+                <image class="profile-img" src="{{new_avatar}}" bind:tap="chooseAvatar" />
+                <view class="pop-btns">
+                    <text class="pop-btn-cancel" bind:tap="onClose">取消</text>
+                    <text class="pop-btn-confirm1" bind:tap="confirmAvatar">确认</text>
+                </view>
+            </view>
+        </van-popup>
         <text class="profile-name">{{my_name}}</text>
         <text class="profile-btn" bind:tap="getUniqueNum">查看唯一码</text>
         <!-- 查看唯一码弹窗 -->

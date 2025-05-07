@@ -43,7 +43,7 @@
     filter: drop-shadow(0 0 8rpx rgba(0, 0, 0, 0.2));
 }
 .van-cell-pecent{
-    color: gray;
+    color: grey;
 }
 .choice{
     width: 100%;
@@ -148,4 +148,31 @@
     width: 500rpx;
     height: 90rpx;
     margin-top: 40rpx;
+}
+.income-color {
+    color: #07c160 !important; /* 收入-绿色 */
+}
+
+.expense-color {
+    color: #ee0a24 !important; /* 支出-红色 */
+}
+.loading-text, .no-more {
+    text-align: center;
+    padding: 20rpx;
+    color: #999;
+    font-size: 24rpx;
+}
+.am-btns{
+    display: flex;
+    align-items: center;
+}
+.pop-btn-confirm1{
+    width: 500rpx;
+    height: 90rpx;
+    margin-top: 40rpx;
+}
+.btn-img{
+    width: 400rpx;
+    height: 80rpx;
+    margin-top: 25rpx;
 }

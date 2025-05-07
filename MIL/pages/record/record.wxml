@@ -24,7 +24,7 @@
                 <van-field model:value="{{ formData1.expense }}" placeholder="请输入支出金额" label="支出金额" data-field="expense" data-form="1" bind:change="onInputChange" />
                 <van-field model:value="{{ formData1.date }}" placeholder="请选择日期" label="日期" data-field="date" data-form="1" bind:focus="onDisplay" />
                 <van-calendar show="{{ calendarShow }}" min-date="{{ minDate }}" max-date="{{ maxDate }}"  bind:close="onClose" bind:confirm="onConfirm" />
-                <van-field model:value="{{ formData1.class }}" placeholder="请选择类别" label="类别" is-link readonly data-field="class" data-form="1" bind:tap="onChooseClass" />
+                <van-field model:value="{{ formData1.class[0] }}" placeholder="请选择类别" label="类别" is-link readonly data-field="class" data-form="1" bind:tap="onChooseClass" />
                 <van-popup show="{{ classShow }}" round position="bottom">
                     <van-cascader
                         wx:if="{{ classShow }}"
@@ -62,7 +62,7 @@
                 <van-field model:value="{{ formData2.income }}" placeholder="请输入收入金额" label="收入金额" data-field="income" data-form="2" bind:change="onInputChange" />
                 <van-field model:value="{{ formData2.date }}" placeholder="请选择日期" label="日期" data-field="date" data-form="2" bind:focus="onDisplay" />
                 <van-calendar show="{{ calendarShow }}" min-date="{{ minDate }}" max-date="{{ maxDate }}"  bind:close="onClose" bind:confirm="onConfirm" />
-                <van-field model:value="{{ formData2.class }}" placeholder="请选择类别" label="类别"  is-link readonly data-field="class" data-form="2" bind:tap="onChooseClass" />
+                <van-field model:value="{{ formData2.class[0] }}" placeholder="请选择类别" label="类别"  is-link readonly data-field="class" data-form="2" bind:tap="onChooseClass" />
                 <van-popup show="{{ classShow }}" round position="bottom">
                     <van-cascader
                         wx:if="{{ classShow }}"
@@ -82,7 +82,7 @@
                             <van-cell-group>
                                 <van-field model:value="{{formData2.amStartDate}}" label="折旧起始日" placeholder="请选择日期" bind:focus="onDisplay" />
                                     <van-calendar show="{{ calendarShow }}" min-date="{{ minDate }}" max-date="{{ maxDate }}"  bind:close="onClose" bind:confirm="onAmConfirm" />
-                                <van-field model:value="{{formData2.amDates}}" label="折旧天数" placeholder="请输入天数" bind:change="onAmDatesChange" />
+                                <van-field model:value="{{formData2.amDates}}" label="折旧月数" placeholder="请输入折旧月数" bind:change="onAmDatesChange" />
                             </van-cell-group>
                         </view>
                         <view class="am-btns">
@@ -100,6 +100,17 @@
                 <van-field model:value="{{ formData3.value }}" placeholder="请输入物品估值" label="物品估值" data-field="value" data-form="3" bind:change="onInputChange" />
                 <van-field model:value="{{ formData3.date }}" placeholder="请输入日期" label="日期" data-field="date" data-form="3" bind:focus="onDisplay" />
                 <van-calendar show="{{ calendarShow }}" min-date="{{ minDate }}" max-date="{{ maxDate }}"  bind:close="onClose" bind:confirm="onConfirm" />
+                <van-field model:value="{{ formData3.class[0] }}" placeholder="请选择类别" label="类别"  is-link readonly data-field="class" data-form="3" bind:tap="onChooseClass" />
+                <van-popup show="{{ classShow }}" round position="bottom">
+                    <van-cascader
+                        wx:if="{{ classShow }}"
+                        value="{{ cascaderValue }}"
+                        title="请选择类别"
+                        options="{{ classOptions3 }}"
+                        bind:close="onClose"
+                        bind:finish="onFinish"
+                    />
+                </van-popup>
                 <van-field model:value="{{ formData3.name }}" placeholder="请输入物品名称" label="物品名称" data-field="name" data-form="3" bind:change="onInputChange" />
                 <van-field model:value="{{ formData3.num_months }}" placeholder="请输入折旧月数" label="折旧月数" data-field="num_months" data-form="3" bind:change="onInputChange" />
             </van-cell-group>

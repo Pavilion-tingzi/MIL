@@ -1,5 +1,6 @@
 // pages/login/login.js
 import api from '../../config/settings'
+const { authRequest } = require('../../utils/request')
 
 Page({
     data: {
@@ -8,6 +9,10 @@ Page({
         username: "",
         password: "",
         checked: false,
+        username_reg:"",
+        nickname_reg:"",
+        password_reg:"",
+        password_reg2:"",
     },
     showPopup(){
         this.setData({ show: true });
@@ -84,8 +89,58 @@ Page({
         })
     },
     onRegister(){
+        wx.showLoading({
+            title: '注册中...',
+        })
         // 处理注册数据逻辑
+        const username = this.data.username_reg
+        const nickname = this.data.nickname_reg
+        const password = this.data.password_reg
+        const password2 = this.data.password_reg2
+
+        wx.request({
+            url: api.register,
+            method: 'POST',
+            data: {
+                username: username,
+                password: password,
+                nickname: nickname,
+                password2:password2
+            },
+            success: (res) => {
+                wx.hideLoading()
+                console.log(res)
+                if (res.statusCode === 201) {
+                //弹窗提示登录成功
+                wx.showModal({
+                    title: '', // 对话框标题
+                    content: '注册成功，请进行登录', // 对话框内容
+                    showCancel: false, // 是否显示取消按钮
+                    confirmText: '确定', // 确定按钮的文本
+                })
+                this.setData({ 
+                    show_rg: false, checked: false, show: true
+                });
+                } else {
+                    const firstKey = Object.keys(res.data)[0];
+                    wx.showModal({
+                        title: '',
+                        content: firstKey+":"+res.data[firstKey][0],
+                        showCancel: false, // 是否显示取消按钮
+                        confirmText: '确定', // 确定按钮的文本
+                    })
+                }
+            },
+            fail: (err) => {
+                wx.hideLoading()
+                wx.showToast({
+                    title: '网络错误',
+                    icon: 'none'
+                })
+            }
+        })
+
         // 关闭弹出页，需要增加判断是否注册成功逻辑
-        this.setData({ show_rg: false, checked: false});
+        
     }
 })

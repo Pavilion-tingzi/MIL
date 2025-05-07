@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser
+from .models import CustomUser, Setting, CashFlow, SmallCategory, BigCategory
 
 
 class CustomUserAdmin(UserAdmin):
@@ -24,6 +24,21 @@ class CustomUserAdmin(UserAdmin):
     list_display = ('username', 'nickname','unicode')
     search_fields = ('username', 'nickname','unicode')
 
+#自定义小分类的Admin界面
+class SmallCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name','BigCategory')
+    search_fields = ('name',)
+
+class CashFlowAdmin(admin.ModelAdmin):
+    list_display = ('transaction_date','transaction_type','subcategory','user','item_name')
+    search_fields = ('transaction_type','user',)
+
+
 # Register your models here.
-admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(CustomUser)
+admin.site.register(Setting)
+admin.site.register(CashFlow,CashFlowAdmin)
+admin.site.register(SmallCategory,SmallCategoryAdmin)
+admin.site.register(BigCategory)
+
 

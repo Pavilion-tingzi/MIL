@@ -1,6 +1,8 @@
 import dropdownTemplate from '../../templates/dropdown/dropdown';
 import * as echarts from '../../components/ec-canvas/echarts';
 import headerTemplate from '../../templates/header/header';
+import api from '../../config/settings';
+const { authRequest } = require('../../utils/request');
 
 function initChart(canvas, width, height,prd) {
     console.log("开始进行initChart");  
@@ -54,95 +56,6 @@ Page({
           },
         //以下是明细表列表中元素的取值
         cell_values: [
-          {cell_id: '1',
-           cell_date: '03-02 星期五',
-           cell_date_values: [
-               {
-                cell_icon: '/images/icon/bc_transport.png',
-                cell_price: '￥9.99',
-                cell_class: '交通-公交',
-                cell_tag: '已摊销',
-                cell_belong: '@李四',
-                cell_type:'支出',
-                },
-                {
-                cell_icon: '/images/icon/sc_lunch.png',
-                cell_price: '￥4.30',
-                cell_class: '餐饮-午餐',
-                cell_belong: '@李四',
-                cell_tag: '',
-                cell_type:'支出',
-                },
-                {
-                cell_icon: '/images/icon/sc_lunch.png',
-                cell_price: '￥4.30',
-                cell_class: '工资',
-                cell_belong: '@李四',
-                cell_tag: '',
-                cell_type:'支出',
-                }
-            ]
-          },
-          {cell_id: '2',
-           cell_date: '03-01 星期四',
-           cell_date_values: [
-               {cell_icon: '/images/icon/bc_transport.png',
-                cell_price: '￥10.01',
-                cell_class: '交通-公交',
-                cell_tag: '已摊销',
-                cell_belong: '@张三',
-                cell_type:'支出',
-                },
-                {
-                cell_icon: '/images/icon/sc_lunch.png',
-                cell_price: '￥5.13',
-                cell_class: '餐饮-午餐',
-                cell_belong: '@张三',
-                cell_tag: '',
-                cell_type:'支出',
-                }
-            ]
-          },
-          {cell_id: '3',
-           cell_date: '02-28 星期三',
-           cell_date_values: [
-               {cell_icon: '/images/icon/bc_transport.png',
-                cell_price: '￥10.01',
-                cell_class: '交通-公交',
-                cell_tag: '已摊销',
-                cell_belong: '@张三',
-                cell_type:'支出',
-                },
-                {
-                cell_icon: '/images/icon/sc_lunch.png',
-                cell_price: '￥5.13',
-                cell_class: '餐饮-午餐',
-                cell_belong: '@张三',
-                cell_tag: '',
-                cell_type:'支出',
-                }
-            ]
-          },
-          {cell_id: '4',
-          cell_date: '02-27 星期二',
-          cell_date_values: [
-              {cell_icon: '/images/icon/bc_transport.png',
-               cell_price: '￥10.01',
-               cell_class: '交通-公交',
-               cell_tag: '已摊销',
-               cell_belong: '@张三',
-               cell_type:'支出',
-               },
-               {
-               cell_icon: '/images/icon/sc_lunch.png',
-               cell_price: '￥5.13',
-               cell_class: '餐饮-午餐',
-               cell_belong: '@张三',
-               cell_tag: '',
-               cell_type:'支出',
-               }
-           ]
-         },
       ],
         //以下是统计表列表中元素的取值
         cell_values_s: [
@@ -193,16 +106,20 @@ Page({
       //修改时存放索引
       bigIndex:"",
       smallIndex:"",
-      showModify:false,
+      showModify:[false,false,false],
+      //修改页面的日历显示
+      calendarShow: false,
+      minDate:new Date(2024, 0, 1).getTime(),
+      maxDate:new Date(2027, 0, 1).getTime(),
+      //修改页面的类别和摊销设置显示
+      classShow: false, 
+      amortizeShow: false,
       //修改时临时存放
-      mdyCellValue:{
-            cell_icon: '/images/icon/bc_transport.png',
-            cell_price: '',
-            cell_class: '',
-            cell_tag: '',
-            cell_belong: '',
-            cell_type:'',
-      }
+      mdyCellValue:{},
+      page: 1,         // 当前页码
+      pageSize: 5,    // 每页条数
+      isLoading: false, // 加载状态
+      hasMore: true    // 是否还有更多数据
     },
     ...dropdownTemplate.methods, 
     ...headerTemplate.methods, 
@@ -215,6 +132,8 @@ Page({
             }
         }, 1000);
         console.log('页面数据:', this.data); // 确认ec是否存在
+        // 获取页面明细表数据
+        this.fetchCashFlowInfo(false);
     },
     onChange(event) {
         if (event.detail.index === 1) { // 仅对第二个 Tab 生效
@@ -253,7 +172,21 @@ Page({
         }
         console.log("这里：",this.data.selectedData_sname)
         // 这里可以执行其他数据处理逻辑
-      },
+    },
+    //以下为日历相关
+    onDisplay() {
+        this.setData({ calendarShow: true });
+    },
+    formatDate(date) {
+        date = new Date(date);
+        return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    },
+    onConfirm(event) {
+        this.setData({
+            calendarShow: false,  
+            "mdyCellValue.transaction_date": this.formatDate(event.detail),
+          });
+    },
     //取消选择
     deSelect(){
         this.setData({
@@ -262,28 +195,46 @@ Page({
             selectedData_notes: "",
         })
     },
-    //打开修改弹窗
+    //打开修改弹窗,获取需要修改的记录数据
     showModify(e){
-        const {bigIndex,smallIndex} = e.currentTarget.dataset;
-        this.setData({
-            bigIndex:bigIndex,
-            smallIndex:smallIndex,
-            showModify:true,
-        })
+        const {celltype,id} = e.currentTarget.dataset;
+        this.fetchOneCashFlow(id);
+        console.log(this.data.mdyCellValue)
+        if(celltype==="支出"){
+            this.setData({
+                showModify:[true,false,false],
+            })
+        } else if(celltype==="收入"){
+            this.setData({
+                showModify:[false,true,false],
+            })
+        } else {
+            this.setData({
+                showModify:[false,false,true],
+            })
+        } 
     },
     onDelete(e){
-        const {bigIndex,smallIndex} = e.currentTarget.dataset;
+        const {bigIndex,smallIndex,id} = e.currentTarget.dataset;
         // 显示确认弹窗
         //增加判断逻辑：只能删除自己的记录
         wx.showModal({
             title: '确认删除',
             content: `确定要删除这条记录吗？`,
-            success: (res) => {
+            success: async (res) => {
             if (res.confirm) {
                 // 用户点击了确定，还需要补充后端数据库操作
                 this.setData({
                     [`cell_values[${bigIndex}].cell_date_values`]: this.data.cell_values[bigIndex].cell_date_values.filter((item,i) => i !== smallIndex)
                 });
+                try {
+                    const res = await authRequest({
+                      url: api.cashflow+`${id}/`,
+                      method: 'DELETE'
+                    });
+                } catch(err){
+                    console.log(err)
+                }
                 // 显示操作成功提示
                 wx.showToast({
                     title: '删除成功',
@@ -300,7 +251,119 @@ Page({
     onClose(){
         this.setData({
             showModify:false,
+            calendarShow: false,
+            classShow: false, 
+            amortizeShow: false
         })
     },
+    // 下拉刷新逻辑
+    onPullDownRefresh() {
+        this.setData({
+            page: 1,
+            hasMore: true
+        });
+        // 重新加载数据
+        this.fetchCashFlowInfo(true);
+    },
+    // 上拉加载更多
+    onReachBottom() {
+        if (!this.data.isLoading && this.data.hasMore) {
+        this.fetchCashFlowInfo(false);
+        }
+    },
+    //获取流水明细表数据，在onload和onPullDownRefresh中调用
+    async fetchCashFlowInfo(isRefresh = false) {
+        if (this.data.isLoading || !this.data.hasMore) return;
+        this.setData({ isLoading: true });
+
+        try {
+          const res = await authRequest({
+            url: api.cashflow,
+            method: 'GET',
+            data: {
+                page: Number(isRefresh ? 1 : this.data.page),
+                size: Number(this.data.pageSize)
+              }
+          });
+          if (res.statusCode === 200){
+            const apiData = res.data.results;
+            const transformApiData = this.transformApiData(apiData);
+            
+            this.setData({
+                cell_values: isRefresh ? transformApiData.cell_values : [...this.data.cell_values,...transformApiData.cell_values],
+                page: isRefresh ? 2 : Number(this.data.page) + 1,
+                hasMore: res.data.next === null? false:true
+            })
+          }  
+        } catch (err) {
+          console.error('获取现金流水信息失败', err)
+          wx.showToast({ title: '获取信息失败', icon: 'none' })
+        } finally {
+            this.setData({ isLoading: false });
+            if (isRefresh) wx.stopPullDownRefresh();
+          }
+    },
+    //接口返回的现金流水明细数据格式调整
+    transformApiData(apiData) {
+        // 按日期分组
+        const dateGroups = {};
+        
+        apiData.forEach((item, index) => {
+            // 格式化日期为 "MM-DD 星期X"
+            const dateObj = new Date(item.transaction_date);
+            const options = { month: '2-digit', day: '2-digit', weekday: 'long' };
+            const formattedDate = dateObj.toLocaleDateString('zh-CN', options)
+                .replace(/\//g, '-')
+                .replace('星期', ' 星期');
+            
+            // 构建条目
+            const entry = {
+                cell_sid : item.id,
+                cell_icon: item.subcategory.icon,
+                cell_price: `￥${item.amount}`,
+                cell_class: item.subcategory.name + (item.transaction_type === 2 ? '(收入)' : ''),
+                cell_tag: item.is_amortized ? '已摊销' : '',
+                cell_belong: `@${item.user.nickname}`,
+                cell_type: item.transaction_type_display
+            };
+            
+            if (!dateGroups[formattedDate]) {
+                dateGroups[formattedDate] = [];
+            }
+            dateGroups[formattedDate].push(entry);
+        });
+        
+        // 转换为需要的格式
+        const result = [];
+        let i = 1;
+        for (const [date, entries] of Object.entries(dateGroups)) {
+            result.push({
+                cell_id: String(i++),
+                cell_date: date,
+                cell_date_values: entries
+            });
+        }
+        
+        return { cell_values: result };
+    },
+    //获取单条流水记录
+    async fetchOneCashFlow(id) {
+        try {
+            const res = await authRequest({
+              url: api.cashflow+id+"/",
+              method: 'PATCH',
+            });
+            if (res.statusCode === 200){
+              const apiData = res.data;
+              this.setData({
+                mdyCellValue: apiData
+              })
+              console.log(apiData)
+            }  
+          } catch (err) {
+            console.error('获取现金流明细信息失败', err)
+            wx.showToast({ title: '获取信息失败', icon: 'none' })
+          } 
+    }
   });
 

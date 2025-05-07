@@ -1,6 +1,6 @@
 import Toast from '@vant/weapp/toast/toast';
 import api from '../../config/settings'
-const { request, refreshToken, authRequest } = require('../../utils/request')
+const { myrequest, refreshToken, authRequest,authUploadFile } = require('../../utils/request')
 
 Page({
   data: {
@@ -99,6 +99,9 @@ Page({
     showIssueInvite:false,
     inviteName:"",
     inviteUniqueNum:"",
+    //修改头像
+    showChangeAvatar:false,
+    new_avatar:"",
   },
   onLoad(){
     this.fetchUserInfo()
@@ -138,6 +141,7 @@ Page({
         showIssueInvite:false,
         showAddConfig:false,
         showMdyConfig:false,
+        showChangeAvatar:false,
     })
   },
   ignoreInvite(e){
@@ -330,6 +334,81 @@ Page({
         url: '/pages/editclass/editclass',
       })
   },
+  showChangeAvatar(){
+    this.setData({
+        showChangeAvatar:true,
+    })
+  },
+  chooseAvatar(){
+    const that = this;
+    wx.chooseMedia({
+      count: 1,  // 限制选择图片的数量
+      mediaType: ['image'],  // 指定选择的媒体类型，这里只选择图片
+      sourceType: ['album', 'camera'],  // 可以指定来源是相册还是相机，默认二者都有
+      success: function (res) {
+        // tempFilePath可以作为img标签的src属性显示图片
+        const tempFilePaths = res.tempFiles[0].tempFilePath;
+        that.setData({
+          new_avatar: tempFilePaths
+        });
+      },
+      fail: function (err) {
+        console.error(err);
+        wx.showToast({
+          title: '选择图片失败',
+          icon: 'none',
+          duration: 2000
+        });
+      }
+    });
+  },
+  confirmAvatar() {
+    const { new_avatar } = this.data;
+  
+    if (!new_avatar) {
+      wx.showToast({ title: '请先选择图片', icon: 'none' });
+      return;
+    }
+  
+    wx.showLoading({ title: '上传中...', mask: true });
+  
+    authUploadFile({
+      url: api.upload_avatar,
+      filePath: new_avatar,
+      name: 'avatar'
+    })
+      .then(res => {
+        wx.hideLoading();
+        if (res.statusCode === 200) {
+          wx.showToast({ title: '上传成功', icon: 'success' });
+          // 更新本地头像显示（假设接口返回新头像URL）
+          if (res.data.avatar) {
+            this.setData({ 
+                profile_icon: res.data.avatar,
+                showChangeAvatar:false,
+                new_avatar:res.data.avatar,
+            });
+          }
+        } else {
+          wx.showToast({ title: res.data.message || '上传失败', icon: 'none' });
+        }
+      })
+      .catch(err => {
+        wx.hideLoading();
+        console.error('上传失败:', err);
+  
+        let message = '网络错误';
+        if (err.statusCode === 401) {
+          message = '登录已过期，请重新登录';
+        } else if (err.errMsg.includes('timeout')) {
+          message = '上传超时';
+        } else if (err.data && err.data.message) {
+          message = err.data.message;
+        }
+  
+        wx.showToast({ title: message, icon: 'none' });
+      });
+  },
   //获取页面数据，在onLoad函数中调用
   async fetchUserInfo() {
     try {
@@ -337,11 +416,11 @@ Page({
         url: api.users,
         method: 'GET'
       })
-      console.log(res)
       this.setData({
         profile_icon:res.data.avatar,
         my_name:res.data.nickname,
         my_uniqueNum:res.data.unicode,
+        new_avatar:res.data.avatar,
       })
     } catch (err) {
       console.error('获取用户信息失败', err)

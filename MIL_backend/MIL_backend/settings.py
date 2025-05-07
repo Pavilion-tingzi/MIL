@@ -119,11 +119,13 @@ AUTH_USER_MODEL = 'MIL.CustomUser'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10  # 默认每页数量
 }
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=10),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=240),
+    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=360),
     'ROTATE_REFRESH_TOKENS': True,       # 每次刷新生成新的 Refresh Token
     'BLACKLIST_AFTER_ROTATION': True,    # 将旧 Refresh Token 加入黑名单
 }
