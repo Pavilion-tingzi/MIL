@@ -3,8 +3,8 @@ const dropdownTemplate = {
     data:{
         showCalendar: true,      // 控制日历显示
         dateRangeText: '选择日期', // 下拉菜单标题
-        minDate: new Date(2023, 0, 1).getTime(),  // 最小可选日期
-        maxDate: new Date(2029, 11, 31).getTime(), // 最大可选日期
+        minDate: new Date(2025, 0, 1).getTime(),  // 最小可选日期
+        maxDate: new Date(2025, 12, 31).getTime(), // 最大可选日期
         selectedDates: [],         // 存储选中日期
         option1: [
         { text: '我的账本', value: 0 },
@@ -57,18 +57,22 @@ const dropdownTemplate = {
         const [start, end] = e.detail;
         const startStr = this.formatDate(start);
         const endStr = this.formatDate(end);
-
+        
         this.setData({
-            'dropdown1.selectedDates': [start, end],
+            'dropdown1.selectedDates': [startStr, endStr],
             'dropdown1.dateRangeText': `${startStr} 至 ${endStr}`,
             'dropdown1.showCalendar': true,
             showChart:true,
+            page: 1,
+            hasMore: true,
         });
 
         const dropdownItem = this.selectComponent('#date-picker');
         if (dropdownItem) {
             dropdownItem.toggle(false);
         }
+        // 重新查询明细数据
+        this.fetchCashFlowInfo(true)
     },
     
       // 格式化日期为 YYYY-MM-DD

@@ -13,8 +13,21 @@ class LoginSerializer(serializers.Serializer):
         if not user:
             raise serializers.ValidationError("用户名或密码错误")
         return user
+
+# 用户组信息
+class GroupInfoSerializer(serializers.ModelSerializer):
+    leader_username = serializers.CharField(source='leader.username', read_only=True)
+
+    class Meta:
+        model = Group
+        fields = ['id', 'name', 'leader_username']
+        read_only_fields = fields
+
 # 用户信息
 class UsersSerializer(serializers.ModelSerializer):
+    # 嵌套组信息
+    group_info = GroupInfoSerializer(source='group', read_only=True)
+
     class Meta:
         model = CustomUser
         fields = [
@@ -22,7 +35,8 @@ class UsersSerializer(serializers.ModelSerializer):
             'username',
             'nickname',
             'avatar',  # 头像
-            'unicode'  # 唯一码
+            'unicode',  # 唯一码
+            'group_info'
         ]
 # 用户注册
 class RegisterSerializer(serializers.ModelSerializer):

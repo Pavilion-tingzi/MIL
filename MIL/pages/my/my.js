@@ -43,6 +43,7 @@ Page({
     newPsd:"",
     newPsdRpd:"",
     //团队
+    group_info:"", //团队id和团队名称
     add_gpmb_icon:"/images/icon/add_gpmb.png",
     group_members:[
         {
@@ -102,9 +103,12 @@ Page({
     //修改头像
     showChangeAvatar:false,
     new_avatar:"",
+    //所属用户组
+    
   },
   onLoad(){
     this.fetchUserInfo()
+    this.fetchGroupMembers()
   },
   onReady(){
     this.toast = this.selectComponent('#van-toast');
@@ -421,10 +425,35 @@ Page({
         my_name:res.data.nickname,
         my_uniqueNum:res.data.unicode,
         new_avatar:res.data.avatar,
+        group_info:res.data.group_info
       })
     } catch (err) {
       console.error('获取用户信息失败', err)
       wx.showToast({ title: '获取信息失败', icon: 'none' })
+    }
+  },
+  //获取团队成员数据，在onLoad函数中调用
+  async fetchGroupMembers() {
+    try {
+      const res = await authRequest({
+        url: api.group_members,
+        method: 'GET'
+      })
+      const group_members = [];
+      for(let i = 0; i < res.data.length; i++) {
+        group_members.push({
+          mb_icon: res.data[i].avatar || "",
+          mb_delete_icon: "/images/icon/delete.png",
+          mb_name: res.data[i].nickname || "",
+          mb_id: res.data[i].id || ""
+        });
+      }
+      this.setData({
+        group_members:group_members,
+      });
+    } catch (err) {
+      console.error('获取团队信息失败', err)
+      wx.showToast({ title: '获取团队信息失败', icon: 'none' })
     }
   }
 })

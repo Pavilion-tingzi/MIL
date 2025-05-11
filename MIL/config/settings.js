@@ -1,4 +1,4 @@
-const rootUrl = 'http://127.0.0.1:8000/mil'
+const rootUrl = 'http://192.168.43.253:8000/mil'
 
 module.exports={
     users:rootUrl+"/users",
@@ -7,5 +7,6 @@ module.exports={
     register:rootUrl+"/register/",
     upload_avatar:rootUrl+"/uploadAvatar/",
     cashflow:rootUrl+"/cashFlow/",
-    category:rootUrl+"/category/"
+    category:rootUrl+"/category/",
+    group_members:rootUrl+"/group_members/"
 }

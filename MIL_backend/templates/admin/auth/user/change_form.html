@@ -1,0 +1,17 @@
+<!-- templates/admin/auth/user/change_form.html -->
+{% extends "admin/change_form.html" %}
+
+{% block object-tools-items %}
+    {{ block.super }}
+    <!-- 调试信息开始 -->
+    <li>show_password_change: {{ show_password_change|default:"False" }}</li>
+    <li>original.pk: {{ original.pk }}</li>
+    <!-- 调试信息结束 -->
+    {% if original.pk %}
+    <li>
+        <a href="{% url opts|admin_urlname:'password_change' original.pk %}" class="passwordlink">
+            {% trans 'Change password' %}
+        </a>
+    </li>
+    {% endif %}
+{% endblock %}

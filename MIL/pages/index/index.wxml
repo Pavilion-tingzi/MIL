@@ -35,16 +35,16 @@
             </view>
             <!-- 上拉加载状态提示 -->
             <view wx:if="{{isLoading}}" class="loading-text">加载中...</view>
-            <view wx:if="{{!hasMore}}" class="no-more">没有更多数据了</view>
+            <view wx:if="{{!hasMore}}" class="no-more">没有更多数据lll</view>
             <!--修改弹窗(支出)-->
             <van-popup show="{{ showModify[0] }}" closeable position="bottom" custom-style="height: 70%" overlay-style="background-color: rgba(0, 0, 0, 0.3);" bind:close="onClose">
                 <view class="pop-contents">
                     <text class="pop-title">修改记录</text>
                     <view class="pop-inputs">
                         <van-cell-group>
-                                <van-field model:value="{{ mdyCellValue.amount }}" label="支出金额" placeholder="请填写金额"  data-field="expense" bind:change="onInputChange" />
-                                <van-field model:value="{{ mdyCellValue.transaction_date }}" placeholder="请选择日期" label="日期" data-field="date" bind:focus="onDisplay" />
-                                <van-calendar show="{{ calendarShow }}" min-date="{{ minDate }}" max-date="{{ maxDate }}"  bind:close="onClose" bind:confirm="onConfirm" />
+                                <van-field model:value="{{ mdyCellValue.amount }}" label="支出金额" placeholder="请填写金额"  data-field="amount" bind:change="onInputChange" />
+                                <van-field model:value="{{ mdyCellValue.transaction_date }}" placeholder="请选择日期" label="日期" data-field="transaction_date" bind:focus="onDisplay" />
+                                <van-calendar show="{{ calendarShow }}" min-date="{{ minDate }}" max-date="{{ maxDate }}"  bind:close="onCloseCld" bind:confirm="onConfirm" />
                                 <van-field model:value="{{ mdyCellValue.subcategory.name }}" placeholder="请选择类别" label="类别" is-link readonly data-field="class" bind:tap="onChooseClass" />
                                 <van-popup show="{{ classShow }}" round position="bottom">
                                     <van-cascader
@@ -52,26 +52,27 @@
                                         value="{{ cascaderValue }}"
                                         title="请选择类别"
                                         options="{{ classOptions }}"
-                                        bind:close="onClose"
+                                        bind:close="onCloseClass"
                                         bind:finish="onFinish"
                                     />
                                 </van-popup>
-                                <van-field model:value="{{ mdyCellValue.notes }}" placeholder="请输入备注" label="备注" data-field="notes" data-form="1" bind:change="onInputChange" />
+                                <van-field model:value="{{ mdyCellValue.notes }}" placeholder="请输入备注" label="备注" data-field="notes"  bind:change="onInputChange" />
                                 <van-field model:value="{{ mdyCellValue.amortization_start_date }}起，共{{mdyCellValue.amortization_months}}次" placeholder="" label="摊销设置"  is-link readonly data-field="amortize" bind:tap="setAmortization" />
                                 <van-popup show="{{ amortizeShow }}" round position="bottom" custom-style="height: 40%;" closeable bind:close="onClose">
-                                    <view class="pop-content">
+                                    <view class="pop-contents">
                                         <text class="pop-title">折旧摊销设置</text>
                                         <view class="pop-inputs">
                                             <van-cell-group>
-                                                <van-field model:value="{{formData1.amStartDate}}" label="折旧起始日" placeholder="请选择日期" bind:focus="onDisplay" />
+                                                <van-field model:value="{{mdyCellValue.amortization_start_date}}" label="折旧起始日" placeholder="请选择日期" bind:focus="onDisplay" />
                                                     <van-calendar show="{{ calendarShow }}" min-date="{{ minDate }}" max-date="{{ maxDate }}"  bind:close="onClose" bind:confirm="onAmConfirm" />
-                                                <van-field model:value="{{formData1.amDates}}" label="折旧天数" placeholder="请输入天数" bind:change="onAmDatesChange" />
+                                                <van-field model:value="{{mdyCellValue.amortization_months}}" label="折旧次数" placeholder="请输入折旧次数" bind:change="onAmDatesChange" />
                                             </van-cell-group>
                                         </view>
                                         <view class="am-btns">
-                                            <image class="pop-btn-confirm" src="/images/icon/btn_confirm.png" bind:tap="onClose" />
+                                            <image class="pop-btn-confirm" src="/images/icon/btn_confirm.png" bind:tap="onCloseAm" />
                                             <text class="pop-btn-rewrite"  bind:tap="amRewrite">重置</text>
                                         </view>
+                                        
                                     </view>
                                 </van-popup>
                         </van-cell-group>
@@ -82,37 +83,37 @@
             <!--修改弹窗(收入)-->
             <van-popup show="{{ showModify[1] }}" closeable position="bottom" custom-style="height: 70%" overlay-style="background-color: rgba(0, 0, 0, 0.3);" bind:close="onClose">
                 <view class="pop-contents">
-                    <text class="pop-title">修改记录</text>
+                    <text class="pop-title">修改记录111</text>
                     <view class="pop-inputs">
                         <van-cell-group>
-                            <van-field model:value="{{ formData2.income }}" placeholder="请输入收入金额" label="收入金额" data-field="income" data-form="2" bind:change="onInputChange" />
-                            <van-field model:value="{{ formData2.date }}" placeholder="请选择日期" label="日期" data-field="date" data-form="2" bind:focus="onDisplay" />
-                            <van-calendar show="{{ calendarShow }}" min-date="{{ minDate }}" max-date="{{ maxDate }}"  bind:close="onClose" bind:confirm="onConfirm" />
-                            <van-field model:value="{{ formData2.class[0] }}" placeholder="请选择类别" label="类别"  is-link readonly data-field="class" data-form="2" bind:tap="onChooseClass" />
+                            <van-field model:value="{{ mdyCellValue.amount }}" placeholder="请输入收入金额" label="收入金额" data-field="amount" data-form="2" bind:change="onInputChange" />
+                            <van-field model:value="{{ mdyCellValue.transaction_date }}" placeholder="请选择日期" label="日期" data-field="transaction_date"  bind:focus="onDisplay" />
+                            <van-calendar show="{{ calendarShow }}" min-date="{{ minDate }}" max-date="{{ maxDate }}"  bind:close="onCloseCld" bind:confirm="onConfirm" />
+                            <van-field model:value="{{ mdyCellValue.subcategory.name }}" placeholder="请选择类别" label="类别"  is-link readonly data-field="class"  bind:tap="onChooseClass" />
                             <van-popup show="{{ classShow }}" round position="bottom">
                                 <van-cascader
                                     wx:if="{{ classShow }}"
                                     value="{{ cascaderValue }}"
                                     title="请选择类别"
                                     options="{{ classOptions2 }}"
-                                    bind:close="onClose"
+                                    bind:close="onCloseClass"
                                     bind:finish="onFinish"
                                 />
                             </van-popup>
-                            <van-field model:value="{{ formData2.notes }}" placeholder="请输入备注" label="备注" data-field="notes" data-form="2" bind:change="onInputChange" />
-                            <van-field model:value="{{ formData2.amStartDate }}起，共{{formData2.amDates}}次" placeholder="" label="摊销设置"  is-link readonly data-field="amortize" data-form="2" bind:tap="setAmortization" />
+                            <van-field model:value="{{ mdyCellValue.notes }}" placeholder="请输入备注" label="备注" data-field="notes" bind:change="onInputChange" />
+                            <van-field model:value="{{ mdyCellValue.amortization_start_date }}起，共{{mdyCellValue.amortization_months}}次" placeholder="" label="摊销设置"  is-link readonly data-field="amortize"  bind:tap="setAmortization" />
                             <van-popup show="{{ amortizeShow }}" round position="bottom" custom-style="height: 40%;" closeable bind:close="onClose">
-                                <view class="pop-content">
+                                <view class="pop-contents">
                                     <text class="pop-title">折旧摊销设置</text>
                                     <view class="pop-inputs">
                                         <van-cell-group>
-                                            <van-field model:value="{{formData2.amStartDate}}" label="折旧起始日" placeholder="请选择日期" bind:focus="onDisplay" />
+                                            <van-field model:value="{{mdyCellValue.amortization_start_date}}" label="折旧起始日" placeholder="请选择日期" bind:focus="onDisplay" />
                                                 <van-calendar show="{{ calendarShow }}" min-date="{{ minDate }}" max-date="{{ maxDate }}"  bind:close="onClose" bind:confirm="onAmConfirm" />
-                                            <van-field model:value="{{formData2.amDates}}" label="折旧月数" placeholder="请输入折旧月数" bind:change="onAmDatesChange" />
+                                            <van-field model:value="{{mdyCellValue.amortization_months}}" label="折旧月数" placeholder="请输入折旧月数" bind:change="onAmDatesChange" />
                                         </van-cell-group>
                                     </view>
                                     <view class="am-btns">
-                                        <image class="pop-btn-confirm" src="/images/icon/btn_confirm.png" bind:tap="onClose" />
+                                        <image class="pop-btn-confirm" src="/images/icon/btn_confirm.png" bind:tap="onCloseAm" />
                                         <text class="pop-btn-rewrite"  bind:tap="amRewrite">重置</text>
                                     </view>
                                 </view>
@@ -128,22 +129,22 @@
                     <text class="pop-title">修改记录</text>
                     <view class="pop-inputs">
                         <van-cell-group>
-                            <van-field model:value="{{ formData3.value }}" placeholder="请输入物品估值" label="物品估值" data-field="value" data-form="3" bind:change="onInputChange" />
-                            <van-field model:value="{{ formData3.date }}" placeholder="请输入日期" label="日期" data-field="date" data-form="3" bind:focus="onDisplay" />
-                            <van-calendar show="{{ calendarShow }}" min-date="{{ minDate }}" max-date="{{ maxDate }}"  bind:close="onClose" bind:confirm="onConfirm" />
-                            <van-field model:value="{{ formData3.class[0] }}" placeholder="请选择类别" label="类别"  is-link readonly data-field="class" data-form="3" bind:tap="onChooseClass" />
+                            <van-field model:value="{{ mdyCellValue.amount }}" placeholder="请输入物品估值" label="物品估值" data-field="amount" bind:change="onInputChange" />
+                            <van-field model:value="{{ mdyCellValue.transaction_date }}" placeholder="请输入日期" label="日期" data-field="transaction_date" bind:focus="onDisplay" />
+                            <van-calendar show="{{ calendarShow }}" min-date="{{ minDate }}" max-date="{{ maxDate }}"  bind:close="onCloseCld" bind:confirm="onConfirm" />
+                            <van-field model:value="{{ mdyCellValue.subcategory.name }}" placeholder="请选择类别" label="类别"  is-link readonly data-field="class"  bind:tap="onChooseClass" />
                             <van-popup show="{{ classShow }}" round position="bottom">
                                 <van-cascader
                                     wx:if="{{ classShow }}"
                                     value="{{ cascaderValue }}"
                                     title="请选择类别"
                                     options="{{ classOptions3 }}"
-                                    bind:close="onClose"
+                                    bind:close="onCloseClass"
                                     bind:finish="onFinish"
                                 />
                             </van-popup>
-                            <van-field model:value="{{ formData3.name }}" placeholder="请输入物品名称" label="物品名称" data-field="name" data-form="3" bind:change="onInputChange" />
-                            <van-field model:value="{{ formData3.num_months }}" placeholder="请输入折旧月数" label="折旧月数" data-field="num_months" data-form="3" bind:change="onInputChange" />
+                            <van-field model:value="{{ mdyCellValue.item_name }}" placeholder="请输入物品名称" label="物品名称" data-field="item_name"  bind:change="onInputChange" />
+                            <van-field model:value="{{ mdyCellValue.amortization_months }}" placeholder="请输入折旧月数" label="折旧月数" data-field="amortization_months"  bind:change="onInputChange" />
                         </van-cell-group>
                     </view>
                     <image class="pop-btn-confirm" src="/images/icon/btn_confirm.png" bind:tap="onASClassConfirm" />

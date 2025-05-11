@@ -113,6 +113,44 @@ Page({
       maxDate:new Date(2027, 0, 1).getTime(),
       //修改页面的类别和摊销设置显示
       classShow: false, 
+      classOptions: [
+        {
+          text: '餐饮',
+          value: '1',
+          children: [
+              { text: '早餐', value: '11' },
+              { text: '中餐', value: '12' },
+              { text: '晚餐', value: '13' },
+              { text: '食材', value: '14' },
+              { text: '奶茶', value: '15' },
+              { text: '零食', value: '16' },
+              { text: '调味品', value: '16' }
+            ],
+        },
+        {
+          text: '住宿',
+          value: '2',
+          children: [
+              { text: '房租', value: '21' },
+              { text: '房贷', value: '22' },
+              { text: '物业/水电煤', value: '23' },
+              { text: '维修', value: '24' },
+            ],
+        },
+      ],
+      classOptions2: [
+        {
+          text: '工资',
+          value: '1',
+        },
+        {
+          text: '奖金',
+          value: '2',
+        },
+      ],
+      classOptions3:[],
+      fieldValue: '',
+      cascaderValue: '',
       amortizeShow: false,
       //修改时临时存放
       mdyCellValue:{},
@@ -173,6 +211,16 @@ Page({
         console.log("这里：",this.data.selectedData_sname)
         // 这里可以执行其他数据处理逻辑
     },
+    //修改记录时同步修改mdyCellValue
+    onInputChange: function(e) {
+        const { field } = e.currentTarget.dataset; // 获取字段名
+        const value = e.detail; // 获取输入值
+        console.log("获取的字段为：",field,"获取的值为",value);
+        this.setData({
+          [`mdyCellValue.${field}`]: value // 动态更新对应表单的字段
+        });
+
+    },
     //以下为日历相关
     onDisplay() {
         this.setData({ calendarShow: true });
@@ -187,6 +235,73 @@ Page({
             "mdyCellValue.transaction_date": this.formatDate(event.detail),
           });
     },
+    onCloseCld(){
+        this.setData({
+            calendarShow: false,  
+          });
+    },
+    //以下为选择类别相关
+    onChooseClass(){
+        this.setData({
+            classShow: true,
+          });
+        this.fetchClassInfo()
+    },
+    onFinish(e) {
+        const { selectedOptions, value } = e.detail;
+        const fieldValue = selectedOptions
+            .map((option) => option.text || option.name)
+            .join('/');
+        if (this.data.showModify[0]===true) {
+            this.setData({
+                "mdyCellValue.subcategory.name": fieldValue,
+                "mdyCellValue.subcategory.id":selectedOptions[1].value,
+                cascaderValue: value,
+                classShow: false,
+            })
+        } else {
+            this.setData({
+                "mdyCellValue.subcategory.name": fieldValue,
+                "mdyCellValue.subcategory.id":selectedOptions[0].value,
+                cascaderValue: value,
+                classShow: false,
+            })
+        }
+    },
+    //以下为折旧摊销设置
+    setAmortization(){
+        this.setData({
+            amortizeShow: true,
+        });
+    },
+    onAmDatesChange(event){
+        const amdates = event.detail;
+        this.setData({
+            "mdyCellValue.amortization_months": amdates,  
+          });
+    },
+    onAmConfirm(event){
+        this.setData({
+            calendarShow: false,  
+            "mdyCellValue.amortization_start_date": this.formatDate(event.detail),
+          });
+    },
+    amRewrite(){
+        this.setData({
+            "mdyCellValue.amortization_months": "", 
+            "mdyCellValue.amortization_start_date":"",
+          }); 
+    },
+    onCloseAm(){
+        this.setData({
+            amortizeShow: false
+        })
+    },
+    onCloseClass(){
+        this.setData({
+            classShow: false,
+        })
+    },
     //取消选择
     deSelect(){
         this.setData({
@@ -197,9 +312,9 @@ Page({
     },
     //打开修改弹窗,获取需要修改的记录数据
     showModify(e){
+        console.log(this.data.dropdown1.selectedDates)
         const {celltype,id} = e.currentTarget.dataset;
         this.fetchOneCashFlow(id);
-        console.log(this.data.mdyCellValue)
         if(celltype==="支出"){
             this.setData({
                 showModify:[true,false,false],
@@ -247,14 +362,18 @@ Page({
             }
         });
     },
-    //关闭弹窗
+    //关闭修改弹窗
     onClose(){
         this.setData({
             showModify:false,
-            calendarShow: false,
-            classShow: false, 
-            amortizeShow: false
         })
+    },
+    //确认修改，数据入库
+    onASClassConfirm(){
+        const id = this.data.mdyCellValue.id
+        console.log("确认修改：",id,this.data.mdyCellValue)
+        this.mdyOneCashFlow(id)
+        this.onClose()
     },
     // 下拉刷新逻辑
     onPullDownRefresh() {
@@ -264,6 +383,7 @@ Page({
         });
         // 重新加载数据
         this.fetchCashFlowInfo(true);
+        console.log("isLoading值为：",this.data.isLoading)
     },
     // 上拉加载更多
     onReachBottom() {
@@ -275,16 +395,18 @@ Page({
     async fetchCashFlowInfo(isRefresh = false) {
         if (this.data.isLoading || !this.data.hasMore) return;
         this.setData({ isLoading: true });
-
         try {
           const res = await authRequest({
             url: api.cashflow,
             method: 'GET',
             data: {
                 page: Number(isRefresh ? 1 : this.data.page),
-                size: Number(this.data.pageSize)
+                size: Number(this.data.pageSize),
+                start_date: this.data.dropdown1.selectedDates[0],
+                end_date: this.data.dropdown1.selectedDates[1]
               }
           });
+          console.log(res)
           if (res.statusCode === 200){
             const apiData = res.data.results;
             const transformApiData = this.transformApiData(apiData);
@@ -364,6 +486,144 @@ Page({
             console.error('获取现金流明细信息失败', err)
             wx.showToast({ title: '获取信息失败', icon: 'none' })
           } 
+    },
+    //获取类别数据
+  async fetchClassInfo() {
+    try {
+      const res = await authRequest({
+        url: api.category,
+        method: 'GET'
+      })
+      const apiData = this.transformTypeApiData(res.data)
+      this.setData({
+        classOptions: apiData[0],
+        classOptions2: apiData[1],
+        classOptions3: apiData[2]
+      })
+    } catch (err) {
+      console.error('获取类别信息失败', err)
+      wx.showToast({ title: '获取信息失败', icon: 'none' })
     }
+  },
+  //接口返回的类别明细数据格式调整
+  transformTypeApiData(apiData) {
+    // 1. 按大分类分组
+  const bigCategoryMap = new Map();
+  const bigCategoryMap2 = [];
+  const bigCategoryMap3 = [];
+  
+  apiData.forEach(subCategory => {
+    const bigCat = subCategory.BigCategory;
+    const subCatId = String(subCategory.id);
+    
+    // 2. 处理大分类-支出
+    if (subCategory.BigCategory.type_display === "支出"){
+        if (!bigCategoryMap.has(bigCat.id)) {
+            bigCategoryMap.set(bigCat.id, {
+              // 大分类字段
+              text: bigCat.name,
+              value: String(bigCat.id),
+              // 子分类数组
+              children: []
+            });
+          }
+          // 3. 添加子分类
+          bigCategoryMap.get(bigCat.id).children.push({
+            // 子分类字段
+            text: subCategory.name,
+            value: subCatId,
+          });
+    } else if (subCategory.BigCategory.type_display === "收入") {
+        // 处理大分类-收入
+        bigCategoryMap2.push({
+            text: subCategory.name,
+            value: subCatId,
+        })
+    } else {
+        // 处理大分类-物品收入
+        bigCategoryMap3.push({
+            text: subCategory.name,
+            value: subCatId,
+        })
+    }
+  });
+  
+  // 4. 返回数组格式
+  return [Array.from(bigCategoryMap.values()),Array.from(bigCategoryMap2.values()),Array.from(bigCategoryMap3.values())];
+  },
+  //修改流水记录，数据入库
+  async mdyOneCashFlow(id) {
+    try {
+        if (this.data.showModify[2]===true) {
+            const res = await authRequest({
+                url: api.cashflow+id+"/",
+                method: 'PATCH',
+                data: {
+                  amount:this.data.mdyCellValue.amount,
+                  transaction_date:this.data.mdyCellValue.transaction_date,
+                  notes:this.data.mdyCellValue.notes,
+                  transaction_type:this.data.mdyCellValue.transaction_type,
+                  subcategory_id:this.data.mdyCellValue.subcategory.id,
+                  is_amortized: true,
+                  amortization_start_date: this.data.mdyCellValue.transaction_date,
+                  amortization_months: this.data.mdyCellValue.amortization_months || 1,
+                  item_name: this.data.mdyCellValue.item_name
+                }
+              });
+              if (res.statusCode >=200 && res.statusCode<300){
+                  wx.showToast({ title: '修改成功', icon: 'success' });
+                  this.setData({
+                      mdyCellValue:{},
+                  });
+              } else if(res.statusCode === 400){
+                  const firstKey = Object.keys(res.data)[0];
+                  wx.showModal({
+                      title: '',
+                      content: firstKey+":"+res.data[firstKey][0],
+                      showCancel: false, // 是否显示取消按钮
+                      confirmText: '确定', // 确定按钮的文本
+                  })
+              } else {
+                  wx.showToast({ title: '请重新登录', icon: 'none' })
+              }
+        } else {
+            const res = await authRequest({
+                url: api.cashflow+id+"/",
+                method: 'PATCH',
+                data: {
+                  amount:this.data.mdyCellValue.amount,
+                  transaction_date:this.data.mdyCellValue.transaction_date,
+                  notes:this.data.mdyCellValue.notes,
+                  transaction_type:this.data.mdyCellValue.transaction_type,
+                  subcategory_id:this.data.mdyCellValue.subcategory.id,
+                  is_amortized: this.data.mdyCellValue.amortization_start_date !== null && 
+                  this.data.mdyCellValue.amortization_start_date !== '', // 简写布尔值转换
+                  amortization_start_date: this.data.mdyCellValue.amortization_start_date || null, // 空字符串转为null
+                  amortization_months: this.data.mdyCellValue.amortization_months || null
+                }
+              });
+              if (res.statusCode >=200 && res.statusCode<300){
+                  wx.showToast({ title: '修改成功', icon: 'success' });
+                  this.setData({
+                      mdyCellValue:{},
+                  });
+              } else if(res.statusCode === 400){
+                  const firstKey = Object.keys(res.data)[0];
+                  wx.showModal({
+                      title: '',
+                      content: firstKey+":"+res.data[firstKey][0],
+                      showCancel: false, // 是否显示取消按钮
+                      confirmText: '确定', // 确定按钮的文本
+                  })
+              } else {
+                  wx.showToast({ title: '请重新登录', icon: 'none' })
+              }
+        }
+        
+      } catch (err) {
+        console.error('修改失败', err)
+        wx.showToast({ title: '修改失败', icon: 'none' })
+      } 
+},
   });
 

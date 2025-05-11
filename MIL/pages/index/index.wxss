@@ -176,3 +176,13 @@
     height: 80rpx;
     margin-top: 25rpx;
 }
+.am-btns{
+    display: flex;
+    align-items: center;
+}
+.pop-btn-rewrite{
+    margin-top: 50rpx;
+    color: #542b02;
+    font-size: medium;
+    padding: 15rpx 30rpx;
+}

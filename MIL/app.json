@@ -66,5 +66,6 @@
         "van-search": "@vant/weapp/search/index",
         "van-toast": "@vant/weapp/toast/index"
     },
-    "enablePullDownRefresh": true
+    "enablePullDownRefresh": true,
+    "lazyCodeLoading":"requiredComponents"
 }

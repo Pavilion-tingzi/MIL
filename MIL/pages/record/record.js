@@ -338,7 +338,7 @@ Page({
       wx.showToast({ title: '获取信息失败', icon: 'none' })
     }
   },
-  //接口返回的现金流水明细数据格式调整
+  //接口返回的类别明细数据格式调整
   transformApiData(apiData) {
     // 1. 按大分类分组
   const bigCategoryMap = new Map();

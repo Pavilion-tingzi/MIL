@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 import uuid
 
 # Create your models here.
@@ -7,18 +8,48 @@ class CustomUser(AbstractUser):
     avatar = models.ImageField(upload_to="users/",default='users/default.png')
     create_time = models.DateTimeField(auto_now=True)
     unicode = models.CharField(max_length=50,unique=True,editable=False)
+    nickname = models.CharField(max_length=50)
+    group = models.ForeignKey(
+        'Group',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='members',
+        verbose_name='所属组'
+    )
+
     def save(self, *args, **kwargs):
         if not self.unicode:  # 仅在新建时生成
             self.unicode = uuid.uuid4().hex[:10]  # 取uuid前10位
         super().save(*args, **kwargs)
-    nickname = models.CharField(max_length=50)
-
 
     class Meta:
         verbose_name_plural = "用户权限表"
 
     def __str__(self):
         return self.username
+
+class Group(models.Model):
+    """
+    用户组模型
+    """
+    name = models.CharField(max_length=100, unique=True, verbose_name='组名')
+    leader = models.OneToOneField(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='leading_group',
+        verbose_name='组长'
+    )
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    description = models.TextField(blank=True, null=True, verbose_name='描述')
+
+    class Meta:
+        verbose_name = '用户组'
+        verbose_name_plural = '用户组'
+        ordering = ['-create_time']
+
+    def __str__(self):
+        return self.name
 
 class BigCategory(models.Model):
     """大分类表"""
@@ -65,7 +96,6 @@ class Setting(models.Model):
 
     def __str__(self):
         return self.name
-
 
 class CashFlow(models.Model):
     """现金流表"""
