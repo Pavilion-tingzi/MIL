@@ -84,6 +84,7 @@
     margin-left: 20rpx;
     color: #0e424d;
     font-weight: bold;
+    width: 70%;
 }
 .mb-name{
     color: #0e424d;
@@ -264,3 +265,12 @@
     border-radius: 10%;
     color: #9f8801;
 }
+.group-titles{
+    display: flex;
+}
+.create-group{
+    margin-left: 20rpx;
+    color: #0e424d;
+    width: 30%;
+}
+

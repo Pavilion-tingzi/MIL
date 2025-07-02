@@ -1,4 +1,7 @@
 // pages/search/search.js
+import api from '../../config/settings';
+const { authRequest } = require('../../utils/request');
+
 Page({
     data: {
         class:[
@@ -95,18 +98,19 @@ Page({
         selectedsClassNames: [],
         notesSearch:[],
     },
+    onLoad(){
+        this.fetchClassInfo()
+    },
     onChange(e) {
         this.setData({
             notesSearch: [e.detail]
         });
-        console.log(this.data.notesSearch)
     },
     onClick() {
         const pages = getCurrentPages(); // 获取页面栈
         const prevPage = pages[pages.length - 2]; // 获取上一页实例
         // 调用上一页的方法并传递数据
         prevPage.setSelectedData(this.data.selectedSids,this.data.selectedsClassNames,this.data.notesSearch);
-        console.log(this.data.selectedSids,this.data.selectedsClassNames,this.data.notesSearch)
   
         // 返回上一页
         wx.navigateBack();
@@ -149,10 +153,65 @@ Page({
     confirmSearch(){
         const pages = getCurrentPages(); // 获取页面栈
         const prevPage = pages[pages.length - 2]; // 获取上一页实例
-        // 调用上一页的方法并传递数据
-        prevPage.setSelectedData(this.data.selectedSids,this.data.selectedsClassNames);
-  
-        // 返回上一页
-        wx.navigateBack();
+        if (this.data.selectedSids.length === 0) {
+            wx.showToast({
+              title: '您还未选择类别',
+              icon: 'none'
+            })
+        } else {
+            // 调用上一页的方法并传递数据
+            prevPage.setSelectedData(this.data.selectedSids,this.data.selectedsClassNames);
+    
+            // 返回上一页
+            wx.navigateBack();
+        }
+    },
+    //获取类别数据
+  async fetchClassInfo() {
+    try {
+      const res = await authRequest({
+        url: api.category,
+        method: 'GET'
+      })
+      const apiData = this.transformTypeApiData(res.data)
+      this.setData({
+        class: apiData
+      })
+    } catch (err) {
+      console.error('获取类别信息失败', err)
+      wx.showToast({ title: '获取信息失败', icon: 'none' })
     }
+  },
+  //接口返回的类别明细数据格式调整
+  transformTypeApiData(apiData) {
+    // 1. 按大分类分组
+  const bigCategoryMap = new Map();
+  
+  apiData.forEach(subCategory => {
+    const bigCat = subCategory.BigCategory_detail;
+    const subCatId = String(subCategory.id);
+    
+    if (!bigCategoryMap.has(bigCat.id)) {
+        bigCategoryMap.set(bigCat.id, {
+          // 大分类字段
+          bigClass: bigCat.name,
+          id: String(bigCat.id),
+          hidden: false,
+          // 子分类数组
+          smallClass: []
+        });
+      }
+      // 3. 添加子分类
+      bigCategoryMap.get(bigCat.id).smallClass.push({
+        // 子分类字段
+        sClassName: subCategory.name,
+        sid: subCatId,
+        sClassSrc: subCategory.icon,
+        selected: false,
+      });
+  });
+  
+  // 4. 返回数组格式
+  return Array.from(bigCategoryMap.values());
+  },
 })

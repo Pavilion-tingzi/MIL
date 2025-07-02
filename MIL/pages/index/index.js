@@ -4,86 +4,48 @@ import headerTemplate from '../../templates/header/header';
 import api from '../../config/settings';
 const { authRequest } = require('../../utils/request');
 
-function initChart(canvas, width, height,prd) {
-    console.log("开始进行initChart");  
-    // ...你的图表代码...
-    const chart = echarts.init(canvas, null, {
-      width: width || 300,
-      height: height || 300,
-      devicePixelRatio: prd
-    });
-    canvas.setChart(chart);
-    
-    var option = {
-      backgroundColor: "#ffffff",
-      series: [{
-        label: {
-          normal: {
-            fontSize: 14
-          }
-        },
-        type: 'pie',
-        center: ['50%', '50%'],
-        radius: ['20%', '40%'],
-        data: [{
-          value: 55,
-          name: '北京'
-        }, {
-          value: 20,
-          name: '武汉'
-        }, {
-          value: 10,
-          name: '杭州'
-        }, {
-          value: 20,
-          name: '广州'
-        }, {
-          value: 38,
-          name: '上海'
-        }]
-      }]
-    };
-  
-    chart.setOption(option);
-    return chart;
-  }
-
 Page({  
     data:{
         active: 0, // 当前激活标签
+        isIndexPage:true,
         dropdown1: {
             ...dropdownTemplate.data,
           },
         //以下是明细表列表中元素的取值
         cell_values: [
+            {
+                cell_sid : "",//流水id
+                cell_icon: "",//图标
+                cell_price: "",//金额
+                cell_class: "",//是否为收入，收入显示“（收入）”，支出显示为空
+                cell_tag: "",//是否摊销，摊销显示“已摊销”，否则显示为空
+                cell_belong:"",//所属用户昵称
+                cell_smalltype: "",//交易小类名称
+                cell_bigtype:"",//交易大类id
+            }
       ],
-        //以下是统计表列表中元素的取值
+        //以下是统计表列表中元素的取值(支出)
         cell_values_s: [
           {
-            cell_id: '1',
-            cell_class: "交通",
-            cell_icon:"/images/icon/bc_transport.png",
-            cell_price: "￥9999.99",
-            cell_percent_text: "50%",
-            cell_percent: "50"
-          },
-          {
-            cell_id: '2',
-            cell_class: "餐饮",
-            cell_icon:"/images/icon/bc_meal.png",
-            cell_price: "￥999999.99",
-            cell_percent_text: "30%",
-            cell_percent: "30"
-          },
-          {
-            cell_id: '3',
-            cell_class: "旅游",
-            cell_icon:"/images/icon/bc_travel.png",
-            cell_price: "￥899.84",
-            cell_percent_text: "20%",
-            cell_percent: "20"
-          },
+            big_category_name: "", //如“交通”
+            big_category_icon:"", //图标地址
+            total_amount: "", //大类金额汇总
+            percent: "" //大类金额占总支出比
+          }
       ], 
+      //以下是统计表列表中元素的取值(收入)
+        cell_values_si:[
+            {
+                big_category_name: "", //如“交通”
+                big_category_icon:"", //图标地址
+                total_amount: "", //大类金额汇总
+                percent: "" //大类金额占总收入比
+              }
+        ],
+        //根据标签判断当前统计表中展示的是支出还是收入
+        currentList: [],
+        total_income:"",
+        total_expense:"",
         //统计表中选择收入or支出的标签
       radio: "1",
       radio_icon: {
@@ -95,13 +57,17 @@ Page({
         //统计表中的饼图
       showChart: true,
       ec: {
-        onInit: initChart
+        onInit: null
       },
+      // 统计表中饼图数据（支出）
+      chartData:[],
+      // 统计表中饼图数据（收入）
+      chartData_i:[],
       //统计表中的系数，恩格尔系数等
-      factor: "恩格尔系数0.8，中产",
+      factor: "",
       //搜索页面传来的搜索条件
-      selectedData_sid:"",
-      selectedData_sname:"",
+      selectedData_sid:[],
+      selectedData_sname:[],
       selectedData_notes:"",
       //修改时存放索引
       bigIndex:"",
@@ -109,8 +75,8 @@ Page({
       showModify:[false,false,false],
       //修改页面的日历显示
       calendarShow: false,
-      minDate:new Date(2024, 0, 1).getTime(),
-      maxDate:new Date(2027, 0, 1).getTime(),
+      minDate:new Date(2025, 0, 1).getTime(),
+      maxDate:new Date().getTime(),
       //修改页面的类别和摊销设置显示
       classShow: false, 
       classOptions: [
@@ -155,35 +121,83 @@ Page({
       //修改时临时存放
       mdyCellValue:{},
       page: 1,         // 当前页码
-      pageSize: 5,    // 每页条数
+      pageSize: 6,    // 每页条数
       isLoading: false, // 加载状态
       hasMore: true    // 是否还有更多数据
     },
     ...dropdownTemplate.methods, 
     ...headerTemplate.methods, 
-    onLoad() {
-        // 确保Vant组件初始化
-        setTimeout(() => {
-            const dropdownItem = this.selectComponent('#date-picker');
-            if (dropdownItem) {
-                dropdownItem.toggle(false);
-            }
-        }, 1000);
-        console.log('页面数据:', this.data); // 确认ec是否存在
-        // 获取页面明细表数据
-        this.fetchCashFlowInfo(false);
+
+    initChart(canvas, width, height,prd) {
+        console.log("开始进行initChart"); 
+         
+        // ...你的图表代码...
+        const chart = echarts.init(canvas, null, {
+          width: width || 300,
+          height: height || 300,
+          devicePixelRatio: prd
+        });
+        canvas.setChart(chart);
+        this.chartInstance = chart; // 存储图表实例以便后续更新
+        this.updateChart();
+        return chart;
     },
-    onChange(event) {
+
+    updateChart(){
+        console.log(this.data.chartData_i,this.data.radio)
+        if (!this.chartInstance) return;
+        const option = {
+            backgroundColor: "#ffffff",
+            series: [{
+              label: {
+                normal: {
+                  fontSize: 14
+                }
+              },
+              type: 'pie',
+              center: ['50%', '50%'],
+              radius: ['20%', '40%'],
+              data: this.data.radio === "1" ? this.data.chartData : this.data.chartData_i
+            }]
+          };
+          this.chartInstance.setOption(option);
+    },
+
+    async onLoad() { 
+        wx.showLoading({ title: '加载中' });
+    },
+    async onShow(){
+        await this.setData({ isLoading: false, hasMore: true});
+        await this.fetchCashFlowInfo(true);
+        setTimeout(async () => {
+            await this.fetchSummary();
+            this.setData({
+                ec: {
+                    onInit: this.initChart.bind(this)
+                  }
+            })
+            wx.hideLoading()
+          }, 300);
+    },
+    onReady() {
+        // 此时数据可能已返回，直接渲染
+        wx.hideLoading()
+    },
+    async onChange(event) {
         if (event.detail.index === 1) { // 仅对第二个 Tab 生效
-            this.setData({ 
-                showChart: event.detail.index === 1
+            await this.setData({ 
+                showChart: event.detail.index === 1,
             });
+            await this.fetchSummary();
+            await this.updateChart();
           }
     },
-    onChange_radio(event) {
-        this.setData({
+    async onChange_radio(event) {
+        await this.setData({
           radio: event.detail,
         });
+        this.getCurrentList();
+        this.updateChart();
     },
     onReady() {
     },
@@ -197,7 +211,7 @@ Page({
     setSelectedData: function(sid,sname,notes) {
         if (sname.length===0){
             this.setData({
-                selectedData_sid: "",
+                selectedData_sid: [],
                 selectedData_notes: notes,
                 selectedData_sname: notes,
               });
@@ -208,8 +222,6 @@ Page({
                 selectedData_notes: "",
               });
         }
-        console.log("这里：",this.data.selectedData_sname)
-        // 这里可以执行其他数据处理逻辑
     },
     //修改记录时同步修改mdyCellValue
     onInputChange: function(e) {
@@ -303,31 +315,37 @@ Page({
         })
     },
     //取消选择
-    deSelect(){
-        this.setData({
-            selectedData_sid: "",
-            selectedData_sname: "",
+    async deSelect(){
+        await this.setData({
+            selectedData_sid: [],
+            selectedData_sname: [],
             selectedData_notes: "",
+            isLoading: false, 
+            hasMore: true
         })
+        this.fetchCashFlowInfo(true);
     },
     //打开修改弹窗,获取需要修改的记录数据
-    showModify(e){
-        console.log(this.data.dropdown1.selectedDates)
+    async showModify(e){
         const {celltype,id} = e.currentTarget.dataset;
-        this.fetchOneCashFlow(id);
-        if(celltype==="支出"){
-            this.setData({
-                showModify:[true,false,false],
-            })
-        } else if(celltype==="收入"){
-            this.setData({
-                showModify:[false,true,false],
-            })
+        await this.fetchOneCashFlow(id);
+        if (Object.keys(this.data.mdyCellValue).length === 0) {
+            pass
         } else {
-            this.setData({
-                showModify:[false,false,true],
-            })
-        } 
+            if(celltype==="支出"){
+                this.setData({
+                    showModify:[true,false,false],
+                })
+            } else if(celltype==="收入"){
+                this.setData({
+                    showModify:[false,true,false],
+                })
+            } else {
+                this.setData({
+                    showModify:[false,false,true],
+                })
+            } 
+        }
     },
     onDelete(e){
         const {bigIndex,smallIndex,id} = e.currentTarget.dataset;
@@ -339,23 +357,31 @@ Page({
             success: async (res) => {
             if (res.confirm) {
                 // 用户点击了确定，还需要补充后端数据库操作
-                this.setData({
-                    [`cell_values[${bigIndex}].cell_date_values`]: this.data.cell_values[bigIndex].cell_date_values.filter((item,i) => i !== smallIndex)
-                });
                 try {
                     const res = await authRequest({
                       url: api.cashflow+`${id}/`,
                       method: 'DELETE'
                     });
+                    if (res.statusCode >=200 && res.statusCode<300) {
+                        // 显示操作成功提示
+                        wx.showToast({
+                            title: '删除成功',
+                            icon: 'success',
+                            duration: 1500
+                        });
+                        this.setData({
+                            [`cell_values[${bigIndex}].cell_date_values`]: this.data.cell_values[bigIndex].cell_date_values.filter((item,i) => i !== smallIndex)
+                        });
+                    } else {
+                        wx.showToast({
+                            title: '无权限删除',
+                            icon: 'none'
+                        });
+                    }
                 } catch(err){
                     console.log(err)
                 }
-                // 显示操作成功提示
-                wx.showToast({
-                    title: '删除成功',
-                    icon: 'success',
-                    duration: 1500
-                });
+                
             } else if (res.cancel) {
                 // 用户点击了取消，什么都不做
             }
@@ -383,19 +409,27 @@ Page({
         });
         // 重新加载数据
         this.fetchCashFlowInfo(true);
-        console.log("isLoading值为：",this.data.isLoading)
     },
     // 上拉加载更多
-    onReachBottom() {
+    async onReachBottom() {
         if (!this.data.isLoading && this.data.hasMore) {
-        this.fetchCashFlowInfo(false);
+            await this.fetchCashFlowInfo(false);
         }
+    },
+    // 判断统计表展示支出还是收入数据
+    getCurrentList(){
+        const currentList = this.data.radio === "1" ? this.data.cell_values_s : this.data.cell_values_si;
+        console.log(currentList,this.data.radio);
+        this.setData({
+            currentList:currentList
+        })
     },
     //获取流水明细表数据，在onload和onPullDownRefresh中调用
     async fetchCashFlowInfo(isRefresh = false) {
         if (this.data.isLoading || !this.data.hasMore) return;
         this.setData({ isLoading: true });
         try {
+          console.log("发送了请求")
           const res = await authRequest({
             url: api.cashflow,
             method: 'GET',
@@ -403,20 +437,35 @@ Page({
                 page: Number(isRefresh ? 1 : this.data.page),
                 size: Number(this.data.pageSize),
                 start_date: this.data.dropdown1.selectedDates[0],
-                end_date: this.data.dropdown1.selectedDates[1]
+                end_date: this.data.dropdown1.selectedDates[1],
+                group: this.data.dropdown1.value1 === 1 ? 1 : "",
+                categories: this.data.selectedData_notes[0]? "" : this.data.selectedData_sname.join(','),
+                noteskey: this.data.selectedData_notes[0]? this.data.selectedData_notes[0]:""
               }
           });
-          console.log(res)
           if (res.statusCode === 200){
             const apiData = res.data.results;
             const transformApiData = this.transformApiData(apiData);
-            
             this.setData({
                 cell_values: isRefresh ? transformApiData.cell_values : [...this.data.cell_values,...transformApiData.cell_values],
                 page: isRefresh ? 2 : Number(this.data.page) + 1,
                 hasMore: res.data.next === null? false:true
             })
-          }  
+          }  else if (res.statusCode === 401) {
+              // 401 认证失效，提示用户并跳转登录页
+                wx.showToast({
+                    title: '登录已过期，请重新登录',
+                    icon: 'none',
+                    duration: 2000 // 2秒后自动关闭
+                });
+
+                // 3秒后跳转到登录页
+                setTimeout(() => {
+                    wx.reLaunch({
+                        url: '/pages/login/login' // 替换成你的登录页路径
+                    });
+                }, 3000);
+          }
         } catch (err) {
           console.error('获取现金流水信息失败', err)
           wx.showToast({ title: '获取信息失败', icon: 'none' })
@@ -446,7 +495,8 @@ Page({
                 cell_class: item.subcategory.name + (item.transaction_type === 2 ? '(收入)' : ''),
                 cell_tag: item.is_amortized ? '已摊销' : '',
                 cell_belong: `@${item.user.nickname}`,
-                cell_type: item.transaction_type_display
+                cell_type: item.transaction_type_display,
+                cell_bigtype: item.subcategory.BigCategory
             };
             
             if (!dateGroups[formattedDate]) {
@@ -480,8 +530,15 @@ Page({
               this.setData({
                 mdyCellValue: apiData
               })
-              console.log(apiData)
-            }  
+            } else {
+                this.setData({
+                    mdyCellValue: {}
+                  })
+                wx.showToast({
+                  title: '无权限修改',
+                  icon: 'none'
+                })
+            }
           } catch (err) {
             console.error('获取现金流明细信息失败', err)
             wx.showToast({ title: '获取信息失败', icon: 'none' })
@@ -513,11 +570,11 @@ Page({
   const bigCategoryMap3 = [];
   
   apiData.forEach(subCategory => {
-    const bigCat = subCategory.BigCategory;
+    const bigCat = subCategory.BigCategory_detail;
     const subCatId = String(subCategory.id);
     
     // 2. 处理大分类-支出
-    if (subCategory.BigCategory.type_display === "支出"){
+    if (subCategory.BigCategory_detail.type_display === "支出"){
         if (!bigCategoryMap.has(bigCat.id)) {
             bigCategoryMap.set(bigCat.id, {
               // 大分类字段
@@ -533,7 +590,7 @@ Page({
             text: subCategory.name,
             value: subCatId,
           });
-    } else if (subCategory.BigCategory.type_display === "收入") {
+    } else if (subCategory.BigCategory_detail.type_display === "收入") {
         // 处理大分类-收入
         bigCategoryMap2.push({
             text: subCategory.name,
@@ -564,9 +621,9 @@ Page({
                   notes:this.data.mdyCellValue.notes,
                   transaction_type:this.data.mdyCellValue.transaction_type,
                   subcategory_id:this.data.mdyCellValue.subcategory.id,
-                  is_amortized: true,
+                  is_amortized: this.data.mdyCellValue.amortization_months !== null && this.data.mdyCellValue.amortization_months !== "",
                   amortization_start_date: this.data.mdyCellValue.transaction_date,
-                  amortization_months: this.data.mdyCellValue.amortization_months || 1,
+                  amortization_months: this.data.mdyCellValue.amortization_months || null,
                   item_name: this.data.mdyCellValue.item_name
                 }
               });
@@ -596,9 +653,8 @@ Page({
                   notes:this.data.mdyCellValue.notes,
                   transaction_type:this.data.mdyCellValue.transaction_type,
                   subcategory_id:this.data.mdyCellValue.subcategory.id,
-                  is_amortized: this.data.mdyCellValue.amortization_start_date !== null && 
-                  this.data.mdyCellValue.amortization_start_date !== '', // 简写布尔值转换
-                  amortization_start_date: this.data.mdyCellValue.amortization_start_date || null, // 空字符串转为null
+                  is_amortized: this.data.mdyCellValue.amortization_months !== null && this.data.mdyCellValue.amortization_months !== "", 
+                  amortization_start_date: this.data.mdyCellValue.amortization_months !== ""? this.data.mdyCellValue.amortization_start_date || this.data.mdyCellValue.transaction_date : this.data.mdyCellValue.transaction_date,
                   amortization_months: this.data.mdyCellValue.amortization_months || null
                 }
               });
@@ -619,11 +675,53 @@ Page({
                   wx.showToast({ title: '请重新登录', icon: 'none' })
               }
         }
-        
       } catch (err) {
         console.error('修改失败', err)
         wx.showToast({ title: '修改失败', icon: 'none' })
-      } 
-},
+    } 
+    await this.setData({ isLoading: false, hasMore: true});
+    await this.fetchCashFlowInfo(true);
+  },
+  //获取现金流水统计数据
+  async fetchSummary(){
+    try {
+        const res = await authRequest({
+          url: api.cashflowSummary,
+          method: 'GET',
+          data: {
+              start_date: this.data.dropdown1.selectedDates[0],
+              end_date: this.data.dropdown1.selectedDates[1],
+              group: this.data.dropdown1.value1 === 1 ? 1 : "",
+            }
+        });
+        if (res.statusCode === 200){
+          const apiData = res.data;
+          await this.setData({
+              total_income:apiData.income.total_income,
+              total_expense:apiData.expense.total_expense,
+              cell_values_s:apiData.expense.details,
+              cell_values_si:apiData.income.details,
+              chartData:[],
+              chartData_i:[],
+          })
+          this.getCurrentList()
+          for (let item of apiData.expense.details){
+            this.data.chartData.push({
+                value: item.total_amount,
+                name: item.big_category_name
+              })
+          }
+          for (let item of apiData.income.details){
+            this.data.chartData_i.push({
+                value: item.total_amount,
+                name: item.big_category_name
+              })
+          }
+        }  
+      } catch (err) {
+        console.error('获取统计信息失败', err)
+        wx.showToast({ title: '获取统计信息失败', icon: 'none' })
+      }
+  }
   });
 

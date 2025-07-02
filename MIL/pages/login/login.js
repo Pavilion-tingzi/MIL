@@ -8,11 +8,13 @@ Page({
         show_rg: false,
         username: "",
         password: "",
-        checked: false,
+        isAgreed: false,
         username_reg:"",
         nickname_reg:"",
         password_reg:"",
         password_reg2:"",
+        email:"",
+        code:"",
     },
     showPopup(){
         this.setData({ show: true });
@@ -61,17 +63,21 @@ Page({
             },
             success: (res) => {
                 wx.hideLoading()
-                
+                wx.clearStorage()
                 if (res.statusCode === 200) {
                 // 存储token和用户信息
                 wx.setStorageSync('access_token', res.data.access)
                 wx.setStorageSync('userInfo', res.data.user)
                 wx.setStorageSync('refresh_token', res.data.refresh)
                 
-                // 跳转到首页
-                wx.switchTab({
-                    url: '/pages/index/index'
-                })
+                wx.reLaunch({
+                    url: '/pages/empty/empty', // 创建一个空白中转页
+                    success: () => {
+                      wx.switchTab({
+                        url: '/pages/index/index' // 再跳转回首页
+                      })
+                    }
+                  })
                 } else {
                 wx.showToast({
                     title: res.data.detail || '登录失败',
@@ -89,6 +95,13 @@ Page({
         })
     },
     onRegister(){
+        if (!this.data.isAgreed) {
+            wx.showToast({
+              title: '请先同意用户协议',
+              icon: 'none'
+            });
+            return;
+        }
         wx.showLoading({
             title: '注册中...',
         })
@@ -97,6 +110,8 @@ Page({
         const nickname = this.data.nickname_reg
         const password = this.data.password_reg
         const password2 = this.data.password_reg2
+        const email = this.data.email
+        const code = this.data.code
 
         wx.request({
             url: api.register,
@@ -105,7 +120,9 @@ Page({
                 username: username,
                 password: password,
                 nickname: nickname,
-                password2:password2
+                password2:password2,
+                email:email,
+                code:code
             },
             success: (res) => {
                 wx.hideLoading()
@@ -139,8 +156,48 @@ Page({
                 })
             }
         })
-
-        // 关闭弹出页，需要增加判断是否注册成功逻辑
-        
+    },
+    sendCode(){
+        if(this.data.email !== ""){
+            wx.request({
+                url: api.sendEmailCode,
+                method: 'POST',
+                data: {
+                    email:this.data.email,
+                },
+                success: (res) => {
+                    console.log(res)
+                    if (res.statusCode >= 200 && res.statusCode < 300) {
+                        wx.showToast({
+                            title: '已发至您邮箱',
+                        })
+                    } else {
+                        const firstKey = Object.keys(res.data)[0];
+                        wx.showModal({
+                            title: '',
+                            content: res.data[firstKey][0],
+                            showCancel: false, // 是否显示取消按钮
+                            confirmText: '确定', // 确定按钮的文本
+                        })
+                    }
+                },
+                fail: (err) => {
+                    wx.showToast({
+                        title: err,
+                        icon: 'none'
+                    })
+                }
+            })
+        } else {
+            wx.showToast({
+                title: '请输入邮箱',
+                icon: "none"
+            })
+        }  
+    },
+    toggleAgreement(){
+        this.setData({
+            isAgreed: !this.data.isAgreed
+        });
     }
 })

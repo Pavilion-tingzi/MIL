@@ -1,4 +1,7 @@
 import Toast from '@vant/weapp/toast/toast';
+import api from '../../config/settings';
+const { authRequest } = require('../../utils/request');
+
 Page({
     data: {
         class:[
@@ -32,28 +35,6 @@ Page({
                         sClassName:"零食",
                         sClassSrc:"/images/icon/sc_lunch.png",
                     },
-                ]
-            },
-            {
-                id: "2",
-                bigClass: "交通",
-                hidden:false,
-                smallClass: [
-                    {
-                        sid: "21",
-                        sClassName:"公交地铁",
-                        sClassSrc:"/images/icon/sc_metro.png",
-                    },
-                    {
-                        sid: "22",
-                        sClassName:"打车",
-                        sClassSrc:"/images/icon/sc_taxi.png",
-                    },
-                    {
-                        sid: "23",
-                        sClassName:"加油",
-                        sClassSrc:"/images/icon/sc_gas.png",
-                    }
                 ]
             },
             {
@@ -94,7 +75,10 @@ Page({
             sClassName:"",
             sClassSrc:"",
         },
-        bigIndex:"",
+        bigid:"",
+    },
+    onLoad(){
+        this.fetchClassInfo()
     },
     hidSmallClass(e){
         const bigIndex = e.currentTarget.dataset.bindex;
@@ -122,21 +106,63 @@ Page({
             showABClass:true,
         })
     },
-    onABClassConfirm(){
+    async onABClassConfirm(){
         if (this.data.addBigClass.bigClass != "") {
-            // 创建新的独立对象，而不是直接引用
-            const newBigClassItem = {
-                id: Date.now().toString(), // 生成唯一ID（可以用更严谨的方式）
-                bigClass: this.data.addBigClass.bigClass,
-                hidden: false,
-                smallClass: []
-            };
-            
-            const newClassList = [...this.data.class, newBigClassItem];
-            
+            try {
+                const res = await authRequest({
+                  url: api.big_category,
+                  method: 'POST',
+                  data:{
+                    name:this.data.addBigClass.bigClass,
+                  }
+                });
+                if (res.statusCode >=200 && res.statusCode<300) {
+                    // 显示操作成功提示
+                    this.setData({
+                        "addBigClass.id":res.data.id,
+                    })
+                    wx.showToast({
+                        title: '增加大类成功',
+                        icon: 'success',
+                        duration: 1500
+                    });
+                } else {
+                    wx.showToast({
+                        title: '添加大类失败',
+                        icon: 'none'
+                    });
+                }
+            } catch(err){
+                console.log(err)
+            }
+            try {
+                const res = await authRequest({
+                  url: api.category,
+                  method: 'POST',
+                  data:{
+                    name:this.data.addBigClass.bigClass,
+                    BigCategory:this.data.addBigClass.id,
+                  }
+                });
+                if (res.statusCode >=200 && res.statusCode<300) {
+                    // 显示操作成功提示
+                    wx.showToast({
+                        title: '增加小类成功',
+                        icon: 'success',
+                        duration: 1500
+                    });
+                    this.fetchClassInfo()
+                } else {
+                    wx.showToast({
+                        title: '添加小类失败',
+                        icon: 'none'
+                    });
+                }
+            } catch(err){
+                console.log(err)
+            }
             this.setData({
                 showABClass: false,
-                class: newClassList,
                 "addBigClass.bigClass": "", // 清空输入框
             });
         } else {
@@ -144,73 +170,180 @@ Page({
         }
     },
     addSamllClass(e){
-        const bigIndex = e.currentTarget.dataset.bigIndex;
+        const bigid = e.currentTarget.dataset.bigid;
         this.setData({
             showASClass:true,
-            bigIndex: bigIndex,
+            bigid: bigid,
         });
     },
-    onASClassConfirm(e){
-        const bigIndex = this.data.bigIndex;
-        const newSmallClassItem = {
-            sid: Date.now().toString(), // 生成唯一ID（可以用更严谨的方式）
-            sClassName: this.data.addSmallClass.sClassName,
-            sClassSrc: "/images/icon/bc_travel.png",
-        };
-        const newClassList = [...this.data.class[bigIndex].smallClass, newSmallClassItem];
-        this.setData({
-            [`class[${bigIndex}].smallClass`]:newClassList,
-            showASClass:false,
-        })
+    async onASClassConfirm(e){
+        console.log(this.data.bigid)
+        if (this.data.addSmallClass.sClassName != "") {
+            try {
+                const res = await authRequest({
+                  url: api.category,
+                  method: 'POST',
+                  data:{
+                    name:this.data.addSmallClass.sClassName,
+                    BigCategory:this.data.bigid,
+                  }
+                });
+                if (res.statusCode >=200 && res.statusCode<300) {
+                    // 显示操作成功提示
+                    wx.showToast({
+                        title: '增加小类成功',
+                        icon: 'success',
+                        duration: 1500
+                    });
+                    this.fetchClassInfo()
+                } else {
+                    wx.showToast({
+                        title: '添加小类失败',
+                        icon: 'none'
+                    });
+                }
+            } catch(err){
+                console.log(err)
+            }
+            this.setData({
+                bigid:"",
+                addSmallClass:{},
+                showASClass:false,
+            })
+        } else {
+            Toast("请输入小类名称");
+        }
     },
-    onDeletBClass(e){
+    async onDeletBClass(e){
         const index = e.currentTarget.dataset.bigIndex;
         const bigClassName = this.data.class[index].bigClass;
+        const id = e.currentTarget.dataset.bigid;
         // 显示确认弹窗
         wx.showModal({
             title: '确认删除',
             content: `确定要删除类别「${bigClassName}」吗？`,
-            success: (res) => {
+            success: async (res) => {
             if (res.confirm) {
                 // 用户点击了确定，还需要补充后端数据库操作
-                this.setData({
-                    class: this.data.class.filter((item,i) => i !== index)
-                });
-                // 显示操作成功提示
-                wx.showToast({
-                    title: '删除成功',
-                    icon: 'success',
-                    duration: 1500
-                });
+                try {
+                    const res = await authRequest({
+                      url: api.big_category+`${id}/`,
+                      method: 'DELETE'
+                    });
+                    if (res.statusCode >=200 && res.statusCode<300) {
+                        // 显示操作成功提示
+                        wx.showToast({
+                            title: '删除成功',
+                            icon: 'success',
+                            duration: 1500
+                        });
+                        this.setData({
+                            class: this.data.class.filter((item,i) => i !== index)
+                        });
+                    } else {
+                        wx.showToast({
+                            title: res.data.detail || '删除失败',
+                            icon: 'none'
+                        });
+                    }
+                } catch(err){
+                    console.log(err)
+                }
             } else if (res.cancel) {
                 // 用户点击了取消，什么都不做
             }
             }
         });
     },
-    onDeletSClass(e){
+    async onDeletSClass(e){
         const {bigIndex,smallIndex} = e.currentTarget.dataset;
         const smallClassName = this.data.class[bigIndex].smallClass[smallIndex].sClassName;
+        const id = e.currentTarget.dataset.sid;
         // 显示确认弹窗
         wx.showModal({
             title: '确认删除',
             content: `确定要删除类别「${smallClassName}」吗？`,
-            success: (res) => {
+            success: async (res) => {
             if (res.confirm) {
                 // 用户点击了确定，还需要补充后端数据库操作
-                this.setData({
-                    [`class[${bigIndex}].smallClass`]: this.data.class[bigIndex].smallClass.filter((item,i) => i !== smallIndex)
-                });
-                // 显示操作成功提示
-                wx.showToast({
-                    title: '删除成功',
-                    icon: 'success',
-                    duration: 1500
-                });
+                try {
+                    const res = await authRequest({
+                      url: api.category+`${id}/`,
+                      method: 'DELETE'
+                    });
+                    if (res.statusCode >=200 && res.statusCode<300) {
+                        // 显示操作成功提示
+                        wx.showToast({
+                            title: '删除成功',
+                            icon: 'success',
+                            duration: 1500
+                        });
+                        this.setData({
+                            [`class[${bigIndex}].smallClass`]: this.data.class[bigIndex].smallClass.filter((item,i) => i !== smallIndex)
+                        });
+                    } else {
+                        wx.showToast({
+                            title: res.data.detail || '删除失败',
+                            icon: 'none'
+                        });
+                    }
+                } catch(err){
+                    console.log(err)
+                }
             } else if (res.cancel) {
                 // 用户点击了取消，什么都不做
             }
             }
         });
+    },
+    //获取类别数据
+  async fetchClassInfo() {
+    try {
+      const res = await authRequest({
+        url: api.category,
+        method: 'GET'
+      })
+      const apiData = this.transformTypeApiData(res.data)
+      this.setData({
+        class: apiData,
+      })
+    } catch (err) {
+      console.error('获取类别信息失败', err)
+      wx.showToast({ title: '获取信息失败', icon: 'none' })
     }
+  },
+  //接口返回的类别明细数据格式调整
+  transformTypeApiData(apiData) {
+    // 按大分类分组
+  const bigCategoryMap = new Map();
+  
+  
+  apiData.forEach(subCategory => {
+    const bigCat = subCategory.BigCategory_detail;
+    const subCatId = String(subCategory.id);
+    if (subCategory.BigCategory_detail.type_display === "支出"){
+        if (!bigCategoryMap.has(bigCat.id)) {
+            bigCategoryMap.set(bigCat.id, {
+              // 大分类字段
+              id:bigCat.id,
+              bigClass: bigCat.name,
+              hidden:false,
+              // 子分类数组
+              smallClass: []
+            });
+          }
+          // 3. 添加子分类
+          bigCategoryMap.get(bigCat.id).smallClass.push({
+            // 子分类字段
+            sid: subCatId,
+            sClassName:subCategory.name,
+            sClassSrc:subCategory.icon,
+          });
+    } 
+  });
+  
+  // 返回数组格式
+  return Array.from(bigCategoryMap.values());
+  },
+  
 })

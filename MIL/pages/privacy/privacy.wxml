@@ -1,0 +1,70 @@
+<view class="privacy-container">
+  <view class="header">
+    <text class="title">隐私政策</text>
+  </view>
+  
+  <scroll-view scroll-y class="content">
+    <view class="section">
+      <text class="section-title">一、基本信息</text>
+      <text class="section-content">
+        本小程序由个人开发者独立运营，非常重视用户的隐私保护。本政策将说明我们如何收集、使用和保护您的个人信息。
+      </text>
+    </view>
+    
+    <view class="section">
+      <text class="section-title">二、收集的信息</text>
+      <text class="section-content">
+        1. 注册信息：当您注册账号时，我们会收集您的邮箱和密码。
+        \n2. 设备信息：为保障服务正常运行，我们会收集设备型号、操作系统等基础信息。
+        \n3. 日志信息：当您使用本小程序时，系统会自动记录操作日志。
+      </text>
+    </view>
+    
+    <view class="section">
+      <text class="section-title">三、信息的使用</text>
+      <text class="section-content">
+        1. 为您提供和优化服务
+        \n2. 保障账号和系统安全
+        \n3. 遵守法律法规要求
+        \n注：作为个人开发者，我们不会将您的数据用于任何商业分析或广告投放。
+      </text>
+    </view>
+    
+    <view class="section">
+      <text class="section-title">四、数据存储与保护</text>
+      <text class="section-content">
+        1. 采用阿里云等可信第三方服务存储数据
+        \n2. 通过密码加密等技术措施保护您的信息安全
+        \n3. 尽管有这些措施，请注意互联网传输无法保证100%安全
+      </text>
+    </view>
+    
+    <view class="section">
+      <text class="section-title">五、您的权利</text>
+      <text class="section-content">
+        1. 访问和更正您的个人信息
+        \n2. 删除账号及关联数据
+        \n3. 注销账号
+        \n如需行使上述权利，请联系开发者邮箱。
+      </text>
+    </view>
+    
+    <view class="section">
+      <text class="section-title">六、政策变更</text>
+      <text class="section-content">
+        1. 我们可能会适时更新本政策
+        \n2. 变更后会通过小程序公告通知您
+        \n3. 继续使用服务视为接受更新后的政策
+      </text>
+    </view>
+    
+    <view class="section">
+      <text class="section-title">七、联系我们</text>
+      <text class="section-content">
+        如有任何隐私相关问题，请通过以下方式联系：
+        \n开发者邮箱：liang-zhq@163.com
+        \n我们会尽快回复您的咨询。
+      </text>
+    </view>
+  </scroll-view>
+</view>

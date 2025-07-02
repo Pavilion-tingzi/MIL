@@ -8,6 +8,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.163.com'  # 例如 smtp.qq.com
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = 'liang-zhq@163.com'
+EMAIL_HOST_PASSWORD = 'PWnpQu5dZAB6eWv5'
+DEFAULT_FROM_EMAIL = 'liang-zhq@163.com'
 
 # Application definition
 INSTALLED_APPS = [
@@ -22,6 +29,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'django_crontab',
+    'django_apscheduler',
+]
+
+CRONJOBS = [
+    ('*/1 * * * *', 'MIL.cron.daily_check_recurring_incomes')  # 每天执行
 ]
 
 MIDDLEWARE = [
@@ -128,8 +141,21 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10  # 默认每页数量
 }
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=240),
-    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=360),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10080),
+    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=43200),
     'ROTATE_REFRESH_TOKENS': True,       # 每次刷新生成新的 Refresh Token
     'BLACKLIST_AFTER_ROTATION': True,    # 将旧 Refresh Token 加入黑名单
+}
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',  # 设置日志级别为INFO或DEBUG
+    },
 }

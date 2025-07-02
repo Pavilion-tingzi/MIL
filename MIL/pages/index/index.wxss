@@ -186,3 +186,18 @@
     font-size: medium;
     padding: 15rpx 30rpx;
 }
+.notes{
+    color:grey;
+    font-size:small;
+    margin-top: 1px;
+}
+.total-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.total{
+    color: #0e424d;
+    font-weight: bold;
+    margin-bottom: 5px;
+}

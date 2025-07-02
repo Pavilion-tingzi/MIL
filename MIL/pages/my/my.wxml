@@ -3,7 +3,7 @@
 <van-toast id="van-toast" />
 <view class="head">
     <view class="invite">
-        <image class="invite-img" wx:if="{{has_news}}" src="{{news_icon}}" />
+        <image class="invite-img" hidden="{{ !inviteNews || inviteNews.length === 0 }}" src="{{news_icon}}" />
         <text class="invite-txt" bind:tap="openInviteList">邀请消息</text>
         <van-popup show="{{ inviteShow }}" closeable position="top" custom-style="height: 30%" bind:close="onClose" >
             <view class="pop-contents">
@@ -11,8 +11,8 @@
                 <view class="pop-lists">
                     <view class="pop-content" wx:for="{{inviteNews}}" wx:if="{{!item.ignore}}">
                         <text class="content-txt">{{item.inviter}}邀请您加入团队</text>
-                        <text class="content-confirm" bind:tap="confirmInvite">接受</text>
-                        <text class="content-ignore" data-index="{{index}}" bind:tap="ignoreInvite">忽略</text>
+                        <text class="content-confirm" data-inviter="{{item.inviter_id}}" data-message="{{item.id}}" bind:tap="confirmInvite">接受</text>
+                        <text class="content-ignore" data-message="{{item.id}}" bind:tap="ignoreInvite">忽略</text>
                     </view>
                 </view>
             </view>
@@ -45,7 +45,19 @@
             </view>
             </view>
         </view>
-        <text class="profile-btn" bind:tap="showResetPsd">修改密码</text>
+        <text class="profile-btn" bind:tap="showUserName">查看用户名</text>
+        <!-- 查看用户名弹窗 -->
+        <view wx:if="{{showUserName}}" class="modal-mask">
+            <view class="modal-container">
+                <view class="modal-content" bind:tap="copyTextUsername">
+                    {{my_username}}
+                    <view class="copy-hint">点击文字可复制</view>
+                </view>
+            <view class="modal-footer">
+                <button bind:tap="hideModal" class="confirm-btn">确认</button>
+            </view>
+            </view>
+        </view>
         <!-- 修改密码弹窗 -->
         <van-popup show="{{ showResetPsd }}" closeable position="bottom" custom-style="height: 40%" bind:close="onClose">
             <view class="pop-contents">
@@ -62,18 +74,39 @@
         <text class="profile-btn" bind:tap="redirectToPage" bind:tap="toAddClass">类别维护</text>
     </view>
 </view>
+<!--通知-->
+<van-notice-bar left-icon="volume-o" text="{{notice}}"/>
 <!-- 团队成员 -->
 <view class="group">
     <van-divider />
-    <text class="group-title">团队成员：</text>
+    <view class = "group-titles">
+        <text class="group-title">{{group_info.name}}的成员：</text>
+        <text class="create-group" bind:tap="createGroup" hidden="{{group_info !== null}}">创建团队</text>
+        <text class="create-group" bind:tap="deleteGroup" hidden="{{group_info === null}}">解散团队</text>
+        <van-popup show="{{ showCreateGroup }}" closeable round bind:close="onClose">
+            <view class="issue-pop-contents">
+                <text class="pop-title">创建团队</text>
+                <view class="pop-inputs">
+                    <van-cell-group>
+                        <van-field value="{{newGroup.name}}" required label="团队名称" placeholder="请输入团队名称" data-field="newGroup.name" required bind:change="onChange" />
+                        <van-field value="{{newGroup.description}}" label="描述" placeholder="请输入团队描述" data-field="newGroup.description" bind:change="onChange" />
+                    </van-cell-group>
+                </view>
+                <view class="pop-btns">
+                    <text class="pop-btn-cancel" bind:tap="onClose">取消</text>
+                    <text class="pop-btn-confirm1" bind:tap="onCreateGroup">确认创建</text>
+                </view>
+            </view>
+        </van-popup>
+    </view>
     <view class="group-member">
         <view class="mb"  wx:for="{{group_members}}">
             <view class="mb-pf">
                 <image class="mb-pf-img" src="{{item.mb_icon}}" />
                 <!--删除成员-->
-                <image class="mb-delete-img" src="{{item.mb_delete_icon}}" data-index="{{index}}" bind:tap="onDeletMember" />
+                <image class="mb-delete-img" hidden="{{group_info.leader !== my_id}}" src="{{item.mb_delete_icon}}" data-index="{{index}}" data-mb_id="{{item.mb_id}}" bind:tap="onDeletMember" />
             </view>
-            <text class="mb-name">{{item.mb_name}}</text>
+            <text class="mb-name">{{item.mb_name}}{{item.mb_id === group_info.leader ? '（队长）' : ''}}</text>
         </view>
         <!--邀请成员加入团队-->
         <image class="add-group-member" src="{{add_gpmb_icon}}" bind:tap="issueInvite" />
@@ -82,7 +115,7 @@
                 <text class="pop-title">发出邀请</text>
                 <view class="pop-inputs">
                     <van-cell-group>
-                        <van-field value="{{inviteName}}" required label="昵称" placeholder="请输入被邀请人昵称" data-field="inviteName" bind:change="onChange" />
+                        <van-field value="{{inviteName}}" required label="用户名" placeholder="请输入被邀请人用户名" data-field="inviteName" bind:change="onChange" />
                         <van-field value="{{inviteUniqueNum}}" label="唯一码" placeholder="请输入被邀请人唯一码" required data-field="inviteUniqueNum" bind:change="onChange" />
                     </van-cell-group>
                 </view>
@@ -109,10 +142,17 @@
                         <van-field value="{{newConfig.cf_name}}" label="名称" placeholder="请输入项目名称，如工资" data-field="newConfig.cf_name" bind:change="onChange" />
                         <van-field value="{{newConfig.cf_account}}" label="金额" placeholder="请输入单笔金额" data-field="newConfig.cf_account" bind:change="onChange" />
                         <van-field value="{{newConfig.cf_date}}" label="发放/支付日" placeholder="请输入每月几号发放/支付" data-field="newConfig.cf_date" bind:change="onChange" />
-                        <van-radio-group value="{{ radio }}" direction="horizontal" data-field="newConfig.cf_class" bind:change="onChange" >
-                            <van-radio name="发放">发放</van-radio>
-                            <van-radio name="支付">支付</van-radio>
-                        </van-radio-group>
+                        <van-field model:value="{{ newConfig.cf_smallcategory[0] }}" placeholder="请选择类别" label="类别"  is-link readonly data-field="newConfig.cf_smallcategory" bind:tap="onChooseClass" />
+                        <van-popup show="{{ classShow }}" round position="bottom">
+                            <van-cascader
+                                wx:if="{{ classShow }}"
+                                value="{{ cascaderValue }}"
+                                title="请选择类别"
+                                options="{{ classOptions }}"
+                                bind:close="onClose"
+                                bind:finish="onFinish"
+                            />
+                        </van-popup>
                     </van-cell-group>
                 </view>
                 <image class="pop-btn-confirm" src="/images/icon/btn_confirm.png" bind:tap="onNewConfig" />
@@ -131,16 +171,23 @@
                             <van-field value="{{mdyConfig.cf_name}}" label="名称" data-field="mdyConfig.cf_name" placeholder="请输入项目名称，如工资" bind:change="onChange" />
                             <van-field value="{{mdyConfig.cf_account}}" data-field="mdyConfig.cf_account" label="金额" placeholder="请输入单笔金额" bind:change="onChange" />
                             <van-field value="{{mdyConfig.cf_date}}" label="发放/支付日" data-field="mdyConfig.cf_date" placeholder="请输入每月几号发放/支付" bind:change="onChange" />
-                                <van-radio-group value="{{ mdyConfig.cf_class }}" data-field="mdyConfig.cf_class" direction="horizontal" bind:change="onChange" >
-                                    <van-radio name="发放">发放</van-radio>
-                                    <van-radio name="支付">支付</van-radio>
-                                </van-radio-group>
+                            <van-field model:value="{{ mdyConfig.cf_smallcategory[0] }}" placeholder="请选择类别" label="类别"  is-link readonly data-field="mdyConfig.cf_smallcategory" bind:tap="onChooseClass" />
+                            <van-popup show="{{ classShow }}" round position="bottom">
+                                <van-cascader
+                                    wx:if="{{ classShow }}"
+                                    value="{{ cascaderValue }}"
+                                    title="请选择类别"
+                                    options="{{ classOptions }}"
+                                    bind:close="onClose"
+                                    bind:finish="onFinishMdy"
+                                />
+                            </van-popup>
                         </van-cell-group>
                     </view>
                     <image class="pop-btn-confirm" src="/images/icon/btn_confirm.png" data-index="{{index}}" bind:tap="onMdyConfig" />
                 </view>
             </van-popup>
-            <image class="config-mdf" src="/images/icon/delete_2.png" data-index="{{index}}" bind:tap="onDeleteConfig" />
+            <image class="config-mdf" src="/images/icon/delete_2.png" data-id="{{item.cf_id}}" data-index="{{index}}" bind:tap="onDeleteConfig" />
         </view>
     </view>
     <van-divider />

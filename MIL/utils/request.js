@@ -72,7 +72,6 @@ const uploadFile = (options) => {
       });
     });
 }
-  
 /*** 带Token自动刷新的文件上传*/
 const authUploadFile = async (options) => {
     try {
@@ -90,9 +89,21 @@ const authUploadFile = async (options) => {
       throw err; // 其他错误直接抛出
     }
 };
+
+/*** 微信showModal封装成promise对象*/
+const showModalAsync = async (options) => {
+    return new Promise((resolve) => {
+      wx.showModal({
+        ...options,
+        success: resolve
+      });
+    });
+};
+
 module.exports = {
     myrequest,
     refreshToken,
     authRequest,
-    authUploadFile
+    authUploadFile,
+    showModalAsync
   }

@@ -39,51 +39,21 @@ Page({
         formShow2: false,
         formShow3: false,
         calendarShow: false,
-        minDate:new Date(2024, 0, 1).getTime(),
-        maxDate:new Date(2027, 0, 1).getTime(),
+        minDate:new Date(2025, 0, 1).getTime(),
+        maxDate:new Date().getTime(),
         classShow: false,
-        classOptions: [
-            {
-              text: '餐饮',
-              value: '1',
-              children: [
-                  { text: '早餐', value: '11' },
-                  { text: '中餐', value: '12' },
-                  { text: '晚餐', value: '13' },
-                  { text: '食材', value: '14' },
-                  { text: '奶茶', value: '15' },
-                  { text: '零食', value: '16' },
-                  { text: '调味品', value: '16' }
-                ],
-            },
-            {
-              text: '住宿',
-              value: '2',
-              children: [
-                  { text: '房租', value: '21' },
-                  { text: '房贷', value: '22' },
-                  { text: '物业/水电煤', value: '23' },
-                  { text: '维修', value: '24' },
-                ],
-            },
-          ],
-        classOptions2: [
-            {
-              text: '工资',
-              value: '1',
-            },
-            {
-              text: '奖金',
-              value: '2',
-            },
-          ],
+        classOptions: [],
+        classOptions2: [],
         fieldValue: '',
         cascaderValue: '',
         amortizeShow1: false,
         amortizeShow2: false,
     },
     onLoad(){
-        this.fetchClassInfo()
+        wx.showLoading({ title: '加载中' });
+    },
+    onReady() {
+        wx.hideLoading()
     },
     onChange_radio(event) {
         const selectedValue = event.detail;
@@ -97,13 +67,9 @@ Page({
     onInputChange: function(e) {
         const { field, form } = e.currentTarget.dataset; // 获取字段名和表单标识
         const value = e.detail; // 获取输入值
-        console.log("获取的数据为：",`formData${form}.${field}`);
         this.setData({
           [`formData${form}.${field}`]: value // 动态更新对应表单的字段
         });
-        console.log("表单1:",this.data.formData1);
-        console.log("表单2:",this.data.formData2);
-        console.log("表单3:",this.data.formData3);
     },
     onSubmit: async function() {
         if (this.data.formShow1) {
@@ -118,8 +84,8 @@ Page({
                   transaction_date:this.data.formData1.date,
                   notes:this.data.formData1.notes,
                   transaction_type:1,
-                  is_amortized: this.data.formData1.amStartDate !== "", // 简写布尔值转换
-                  amortization_start_date: this.data.formData1.amStartDate || null, // 空字符串转为null
+                  is_amortized: this.data.formData1.amDates !== "", // 简写布尔值转换
+                  amortization_start_date: this.data.formData1.amortization_months !== ""? this.data.formData1.amStartDate || this.data.formData1.date : this.data.formData1.date, 
                   amortization_months: this.data.formData1.amDates || null
               }
             });
@@ -154,8 +120,8 @@ Page({
                   transaction_date:this.data.formData2.date,
                   notes:this.data.formData2.notes,
                   transaction_type:2,
-                  is_amortized: this.data.formData2.amStartDate !== "", // 简写布尔值转换
-                  amortization_start_date: this.data.formData2.amStartDate || null, // 空字符串转为null
+                  is_amortized: this.data.formData2.amDates !== "", // 简写布尔值转换
+                  amortization_start_date: this.data.formData2.amortization_months !== ""? this.data.formData2.amStartDate || this.data.formData2.date : this.data.formData2.date,
                   amortization_months: this.data.formData2.amDates || null
               }
             });
@@ -190,9 +156,9 @@ Page({
                   transaction_date:this.data.formData3.date,
                   transaction_type:3,
                   item_name:this.data.formData3.name,
-                  is_amortized: true,
+                  is_amortized: this.data.formData3.num_month !== "",
                   amortization_start_date: this.data.formData3.date,
-                  amortization_months: this.data.formData3.num_month || 1
+                  amortization_months: this.data.formData3.num_month || null
               }
             });
             // 请求成功或失败的处理
@@ -250,6 +216,7 @@ Page({
         this.setData({
             classShow: true,
           });
+        this.fetchClassInfo()
     },
     onFinish(e) {
         const { selectedOptions, value } = e.detail;
@@ -346,11 +313,11 @@ Page({
   const bigCategoryMap3 = [];
   
   apiData.forEach(subCategory => {
-    const bigCat = subCategory.BigCategory;
+    const bigCat = subCategory.BigCategory_detail;
     const subCatId = String(subCategory.id);
     
     // 2. 处理大分类-支出
-    if (subCategory.BigCategory.type_display === "支出"){
+    if (subCategory.BigCategory_detail.type_display === "支出"){
         if (!bigCategoryMap.has(bigCat.id)) {
             bigCategoryMap.set(bigCat.id, {
               // 大分类字段
@@ -366,7 +333,7 @@ Page({
             text: subCategory.name,
             value: subCatId,
           });
-    } else if (subCategory.BigCategory.type_display === "收入") {
+    } else if (subCategory.BigCategory_detail.type_display === "收入") {
         // 处理大分类-收入
         bigCategoryMap2.push({
             text: subCategory.name,

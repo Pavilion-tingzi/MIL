@@ -1,0 +1,61 @@
+<view class="agreement-container">
+  <view class="header">
+    <text class="title">用户协议</text>
+  </view>
+  
+  <scroll-view scroll-y class="content">
+    <view class="section">
+      <text class="section-title">一、服务说明</text>
+      <text class="section-content">
+        1. 本小程序由个人开发者独立运营，提供的服务包括：个人现金流水明细和统计、结余明细和统计、联合账本等
+        \n2. 我们保留根据实际情况调整服务内容的权利
+      </text>
+    </view>
+    
+    <view class="section">
+      <text class="section-title">二、账号注册</text>
+      <text class="section-content">
+        1. 您需要提供有效的电子邮箱完成注册
+        \n2. 您应妥善保管账号信息，并对账号下的所有行为负责
+        \n3. 如发现账号被盗用，请立即通过开发者邮箱联系我们
+      </text>
+    </view>
+    
+    <view class="section">
+      <text class="section-title">三、使用规则</text>
+      <text class="section-content">
+        1. 您不得利用本服务从事任何违法活动
+        \n2. 禁止发布垃圾信息、恶意内容或干扰服务正常运行
+        \n3. 不得侵犯他人知识产权或隐私权
+        \n4. 个人开发者资源有限，请合理使用服务
+      </text>
+    </view>
+    
+    <view class="section">
+      <text class="section-title">四、免责声明</text>
+      <text class="section-content">
+        1. 作为个人项目，服务可能不定期维护或中断
+        \n2. 我们会尽力但不保证服务的及时性、安全性
+        \n3. 因不可抗力导致的服务中断不承担责任
+        \n4. 您使用本服务产生的风险需自行承担
+      </text>
+    </view>
+    
+    <view class="section">
+      <text class="section-title">五、协议变更</text>
+      <text class="section-content">
+        1. 我们保留修改本协议的权利
+        \n2. 修改后会通过小程序内公告通知
+        \n3. 继续使用服务视为接受修改后的协议
+      </text>
+    </view>
+    
+    <view class="section">
+      <text class="section-title">六、联系方式</text>
+      <text class="section-content">
+        如有任何问题，请联系：
+        \n开发者邮箱：liang-zhq@163.com
+      </text>
+    </view>
+  </scroll-view>
+</view>

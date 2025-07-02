@@ -7,17 +7,17 @@
     <view class="class-list" wx:for="{{class}}" wx:key="id" wx:for-index="bigIndex">
         <view class="big-class-imgs">
             <text class="big-class {{item.hidden ? 'hidden':''}}" bind:tap="hidSmallClass" data-bindex="{{bigIndex}}">{{item.bigClass}}</text>
-            <image class="bc-delete-img" src="/images/icon/delete.png" data-big-index="{{bigIndex}}" data-small-index="{{index}}" bind:tap="onDeletBClass" />
+            <image class="bc-delete-img" src="/images/icon/delete.png" data-big-index="{{bigIndex}}" data-small-index="{{index}}" data-bigid ="{{item.id}}" bind:tap="onDeletBClass" />
         </view>
         <view class="small-class" hidden="{{item.hidden}}">
             <view class="small-class-content {{item.selected ? 'active' : ''}}" wx:for="{{item.smallClass}}" wx:key="sid" data-sid="{{item.sid}}" data-sClassName="{{item.sClassName}}" data-big-index="{{bigIndex}}" data-small-index="{{index}}">
                 <view class="small-class-imgs">
                     <image class="small-class-img" src="{{item.sClassSrc}}" />
-                    <image class="sc-delete-img" src="/images/icon/delete.png" data-big-index="{{bigIndex}}" data-small-index="{{index}}" bind:tap="onDeletSClass" />
+                    <image class="sc-delete-img" src="/images/icon/delete.png" data-big-index="{{bigIndex}}" data-small-index="{{index}}" data-sid="{{item.sid}}" bind:tap="onDeletSClass" />
                 </view>
                 <text class="small-class-txt">{{item.sClassName}}</text>
             </view>
-            <image class="small-class-img-add" src="/images/icon/add_gpmb.png" data-big-index="{{bigIndex}}" bind:tap="addSamllClass" />
+            <image class="small-class-img-add" src="/images/icon/add_gpmb.png" data-bigid="{{item.id}}" bind:tap="addSamllClass" />
             <van-popup show="{{ showASClass }}" closeable position="bottom" custom-style="height: 30%" overlay-style="background-color: rgba(0, 0, 0, 0.3);" bind:close="onClose">
                 <view class="pop-contents">
                     <text class="pop-title">增加小类</text>

@@ -1,0 +1,21 @@
+<view>
+    <view class="content" wx:for="{{cell_values}}">
+        <van-cell-group title="{{item.cell_date}}">
+            <van-swipe-cell right-width="{{ 130 }}" wx:for="{{item.cell_date_values}}">
+                <van-cell value="{{item.cell_price}}" icon="{{item.cell_icon}}" value-class="{{item.cell_type === '收入' || item.cell_type === '物品收入' ? 'income-color' : 'expense-color'}}">
+                    <view slot="title">
+                        <view class="title-container">
+                            <view class="van-cell-text">{{item.cell_class}}</view>
+                            <van-tag type="danger">{{item.cell_tag}}</van-tag>
+                        </view>
+                        <view class="title-container2">
+                            <text class="tap">{{item.cell_belong}}</text>
+                        </view>
+                    </view>
+                </van-cell>
+            </van-swipe-cell>     
+        </van-cell-group>    
+    </view>
+    <!-- 上拉加载状态提示 -->
+    <view wx:if="{{!hasMore}}" class="no-more">没有更多数据了</view>
+</view>

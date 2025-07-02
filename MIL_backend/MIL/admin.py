@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
-from .models import CustomUser, Setting, CashFlow, SmallCategory, BigCategory, Group
+from .models import CustomUser, Setting, CashFlow, SmallCategory, BigCategory, Group, Message, ProfitDetail, ProfitStat, \
+    EmailVerificationCode, Notice
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm, AdminPasswordChangeForm
 
 class CustomUserChangeForm(UserChangeForm):
@@ -61,22 +62,44 @@ class CustomUserAdmin(UserAdmin):
 
 #自定义小分类的Admin界面
 class SmallCategoryAdmin(admin.ModelAdmin):
-    list_display = ('name','BigCategory')
+    list_display = ('id','name','BigCategory','user')
+    search_fields = ('name',)
+
+class BigCategoryAdmin(admin.ModelAdmin):
+    list_display = ('id','name','user')
     search_fields = ('name',)
 
 class CashFlowAdmin(admin.ModelAdmin):
-    list_display = ('transaction_date','transaction_type','subcategory','user','item_name','created_at','updated_at')
+    list_display = ('id','transaction_date','transaction_type','subcategory','user','item_name','created_at','updated_at')
     search_fields = ('transaction_type','user',)
 
 class GroupAdmin(admin.ModelAdmin):
-    list_display = ('name','leader')
+    list_display = ('id','name','leader')
     search_fields = ('name', 'leader',)
+
+class ProfitDetailAdmin(admin.ModelAdmin):
+    list_display = ('id','original_amount','amortized_amount','amortization_date','transaction_type','subcategory','user')
+    search_fields = ('cash_flow','subcategory','user')
+
+class ProfitStatAdmin(admin.ModelAdmin):
+    list_display = ('id','user','month','profit','total_income','total_expense','updated_at','created_at')
+
+class EmailVerificationCodeAdmin(admin.ModelAdmin):
+    list_display = ('email','code','created_at','is_verified')
+
+class NoticeAdmin(admin.ModelAdmin):
+    list_display = ('title','content','created_at')
 
 # 注册模型
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Setting)
 admin.site.register(CashFlow, CashFlowAdmin)
 admin.site.register(SmallCategory, SmallCategoryAdmin)
-admin.site.register(BigCategory)
+admin.site.register(BigCategory,BigCategoryAdmin)
 admin.site.register(Group, GroupAdmin)
+admin.site.register(Message)
+admin.site.register(ProfitDetail, ProfitDetailAdmin)
+admin.site.register(ProfitStat, ProfitStatAdmin)
+admin.site.register(EmailVerificationCode, EmailVerificationCodeAdmin)
+admin.site.register(Notice, NoticeAdmin)
 
