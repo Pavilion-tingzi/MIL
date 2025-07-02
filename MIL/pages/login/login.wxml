@@ -9,31 +9,35 @@
         <text class="pop-title">用户登录</text>
         <view class="pop-inputs">
             <van-cell-group>
-                <van-field value="" required clearable label="用户名" placeholder="请输入用户名" />
-                <van-field value="" type="password" label="密码" placeholder="请输入密码" required />
+                <van-field value="{{username}}" required clearable label="用户名" placeholder="请输入用户名" data-field="username" bind:change="onChange" />
+                <van-field value="{{password}}" label="密码" type="password" data-field="password" placeholder="请输入密码" required bind:change="onChange"/>
             </van-cell-group>
-        </view>
-        <view class="pop-agreement">
-            <van-checkbox value="{{ checked }}" bind:change="onChange"></van-checkbox>
-            <text class="pop-arm-txt">用户协议</text>
         </view>
         <image class="pop-btn-login" src="/images/icon/btn_login.png" bind:tap="onLogin" />
     </view>
 </van-popup>
 <!-- 注册弹出层 -->
-<van-popup show="{{ show_rg }}" closeable position="bottom" custom-style="height: 50%" bind:close="onClose">
+<van-popup show="{{ show_rg }}" closeable position="bottom" custom-style="height: 75%" bind:close="onClose">
     <view class="pop-content">
         <text class="pop-title">用户注册</text>
         <view class="pop-inputs">
             <van-cell-group>
-                <van-field value="" required clearable label="用户名" placeholder="请输入用户名" />
-                <van-field value="" type="password" label="密码" placeholder="请输入密码" required />
-                <van-field value="" type="password" label="确认密码" placeholder="请再次输入密码" required />
+                <van-field value="{{username_reg}}" required clearable label="用户名" placeholder="请输入用户名" data-field='username_reg' bind:change="onChange" />
+                <van-field value="{{nickname_reg}}" required clearable label="昵称" placeholder="请输入昵称" data-field='nickname_reg' bind:change="onChange" />
+                <van-field value="{{password_reg}}" type="password" label="密码" placeholder="请输入密码" required data-field='password_reg' bind:change="onChange" />
+                <van-field value="{{password_reg2}}" type="password" label="确认密码" placeholder="请再次输入密码" required data-field='password_reg2' bind:change="onChange" />
+                <van-field value="{{email}}" label="邮箱" placeholder="请输入邮箱" required data-field='email' bind:change="onChange" />
+                <van-field value="{{code}}" label="验证码" placeholder="请输入验证码" required data-field='code' bind:change="onChange" use-button-slot>
+                    <van-button slot="button" size="small" type="primary" bind:tap="sendCode">发送验证码</van-button>
+                </van-field>
             </van-cell-group>
         </view>
-        <view class="pop-agreement">
-            <van-checkbox value="{{ checked }}" bind:change="onChange"></van-checkbox>
-            <text class="pop-arm-txt">用户协议</text>
+        <view class="agreement">
+            <checkbox checked="{{isAgreed}}" bindtap="toggleAgreement"></checkbox>
+            <text>我已阅读并同意</text>
+            <navigator url="/pages/agreement/agreement" class="link">《用户协议》</navigator>
+            <text>和</text>
+            <navigator url="/pages/privacy/privacy" class="link">《隐私政策》</navigator>
         </view>
         <image class="pop-btn-login" src="/images/icon/btn_register.png" bind:tap="onRegister" />
     </view>

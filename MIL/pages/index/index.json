@@ -1,5 +1,8 @@
 {
   "usingComponents": {
     "ec-canvas": "../../components/ec-canvas/ec-canvas"
-  }
+  },
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark",
+  "backgroundColor": "#f8f8f8"
 }

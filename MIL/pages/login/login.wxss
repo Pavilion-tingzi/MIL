@@ -49,4 +49,56 @@ page{
 .pop-btn-login{
     width: 500rpx;
     height: 90rpx;
+    margin-top: 30rpx;
 }
+/* 用户协议容器样式 */
+.agreement {
+    display: flex;
+    align-items: center;
+    margin: 30rpx 0;
+    padding: 20rpx;
+    font-size: 26rpx;
+    color: #666;
+    line-height: 1.6;
+    flex-wrap: wrap;
+  }
+  
+  /* 复选框基础样式 */
+  checkbox {
+    margin-right: 10rpx;
+    transform: scale(0.8);
+    transform-origin: center;
+  }
+  
+  /* 复选框选中状态样式 */
+  checkbox .wx-checkbox-input {
+    border-radius: 50%; /* 圆形复选框 */
+    width: 36rpx;
+    height: 36rpx;
+    border: 2rpx solid #ccc;
+  }
+  
+  /* 复选框选中时的样式 */
+  checkbox .wx-checkbox-input.wx-checkbox-input-checked {
+    border-color: #07C160;
+    background: #07C160;
+  }
+  
+  /* 复选框选中时的对勾图标 */
+  checkbox .wx-checkbox-input.wx-checkbox-input-checked::before {
+    color: white;
+    font-size: 28rpx;
+    line-height: 36rpx;
+  }
+  
+  /* 协议链接文字样式 */
+  .link {
+    color: #576B95;
+    margin: 0 5rpx;
+    text-decoration: underline;
+  }
+  
+  /* 协议链接点击效果 */
+  .link:active {
+    opacity: 0.7;
+  }

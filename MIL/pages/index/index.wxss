@@ -23,12 +23,16 @@
     justify-content: center; /* 水平居中 */
     z-index: 1;
   }
+  #mychart {
+    position: relative;
+    z-index: 1; /* 确保比下拉菜单低 */
+  }
   /* 悬浮按钮样式 */
 .float-button {
     position: fixed;
     right: 0rpx;
     bottom: 30rpx;
-    z-index: 9999;
+    z-index: 99;
 }
 
 .float-button image {
@@ -39,7 +43,7 @@
     filter: drop-shadow(0 0 8rpx rgba(0, 0, 0, 0.2));
 }
 .van-cell-pecent{
-    color: gray;
+    color: grey;
 }
 .choice{
     width: 100%;
@@ -106,4 +110,94 @@
 /* 按钮点击效果 */
 .action-btn:active {
     opacity: 0.8;
+}
+/* 搜索页传来的类别数据 */
+.selects{
+    display: flex;
+    margin: 20rpx 20rpx 20rpx 20rpx;
+    flex-wrap: wrap;
+}
+.selects-txt{
+    margin-left: 20rpx;
+    margin-bottom: 10rpx;
+    color: #9f8801;
+    background-color: #f9f4a6;
+    padding: 5rpx 15rpx 5rpx 15rpx;
+    border-radius: 10%;
+}
+.new-selects{
+    margin-left: 20rpx;
+    margin-bottom: 10rpx;
+    color: #9f3301;
+    background-color: #f9bda6;
+    padding: 5rpx 15rpx 5rpx 15rpx;
+    border-radius: 10%;
+}
+.pop-contents{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.pop-title{
+    font-size: large;
+    font-weight: bold;
+    margin-top: 20rpx;
+    margin-bottom: 20rpx;
+}
+.pop-btn-confirm{
+    width: 500rpx;
+    height: 90rpx;
+    margin-top: 40rpx;
+}
+.income-color {
+    color: #07c160 !important; /* 收入-绿色 */
+}
+
+.expense-color {
+    color: #ee0a24 !important; /* 支出-红色 */
+}
+.loading-text, .no-more {
+    text-align: center;
+    padding: 20rpx;
+    color: #999;
+    font-size: 24rpx;
+}
+.am-btns{
+    display: flex;
+    align-items: center;
+}
+.pop-btn-confirm1{
+    width: 500rpx;
+    height: 90rpx;
+    margin-top: 40rpx;
+}
+.btn-img{
+    width: 400rpx;
+    height: 80rpx;
+    margin-top: 25rpx;
+}
+.am-btns{
+    display: flex;
+    align-items: center;
+}
+.pop-btn-rewrite{
+    margin-top: 50rpx;
+    color: #542b02;
+    font-size: medium;
+    padding: 15rpx 30rpx;
+}
+.notes{
+    color:grey;
+    font-size:small;
+    margin-top: 1px;
+}
+.total-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.total{
+    color: #0e424d;
+    font-weight: bold;
+    margin-bottom: 5px;
 }

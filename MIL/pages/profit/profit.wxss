@@ -7,17 +7,19 @@
     position: flex;
     justify-content: center;
     margin-top: 10rpx;
+    z-index: 1;
 }
 ec-canvas {
     display: flex;           /* 启用flex布局 */
     justify-content: center; /* 水平居中 */
-  }
-  .total_value{
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 40rpx;
-  }
+    z-index: 1;
+}
+.total_value{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40rpx;
+}
   .tv_1{
       font-size: larger;
       margin-bottom: 10rpx;
@@ -67,4 +69,24 @@ ec-canvas {
     font-size: 10px;
     color: #368ea4;
 }
+.update{
+    display: flex;
+    margin-bottom: 10px;
+}
+.updatetxt{
+    width:70%;
+    color: rgb(150, 150, 150);
+    margin-top: 12px;
+    margin-left:20px;
+    font-size: small;
+}
+.updatebtn{
+    margin-top: 10px;
+    font-size:small;
+    color: white;
+    background-color: #368ea4;
+    padding: 2px;
+    border-radius: 10%;
+}
+
 

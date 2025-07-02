@@ -4,14 +4,14 @@
             <van-dropdown-menu color="#9d8e01">
                 <van-dropdown-item title="{{dateRangeText}}" id="date-picker" bind:open="onDropdownOpen">
                     <!-- 日历组件放在下拉项中 -->
-                    <van-calendar show="{{showCalendar}}" type="range" min-date="{{minDate}}" max-date="{{maxDate}}" bind:close="onCalendarClose" bind:confirm="onCalendarConfirm" />
+                    <van-calendar id="mainCalendar" show="{{showCalendar}}" type="range" min-date="{{minDate}}" max-date="{{maxDate}}" allow-same-day bind:close="onCalendarClose" bind:confirm="onCalendarConfirm" />
                 </van-dropdown-item>
-                <van-dropdown-item value="{{ value1 }}" options="{{ option1 }}" />
+                <van-dropdown-item value="{{ value1 }}" options="{{ option1 }}" bind:open="hidCharts" bind:closed="showCharts" bind:change="handleFilterChange" />
             </van-dropdown-menu>
         </view>
         <view class="export">
             <image class="img-export" src="/images/icon/export.png" />
-            <text class="text-export">导出</text>
+            <text class="text-export" bind:tap="export">导出</text>
         </view>
     </view>
 </template>

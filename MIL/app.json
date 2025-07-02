@@ -1,10 +1,17 @@
 {
     "pages": [
-        "pages/login/login",
         "pages/index/index",
+        "pages/login/login",
         "pages/profit/profit",
+        "pages/profitDetail/profitDetail",
         "pages/my/my",
         "pages/record/record",
+        "pages/selectclass/selectclass",
+        "pages/search/search",
+        "pages/editclass/editclass",
+        "pages/empty/empty",
+        "pages/agreement/agreement",
+        "pages/privacy/privacy",
         "templates/header2.wxml",
         "templates/drawdown/draw_down.wxml"
     ],
@@ -58,6 +65,12 @@
         "van-popup": "@vant/weapp/popup/index",
         "van-field": "@vant/weapp/field/index",
         "van-checkbox": "@vant/weapp/checkbox/index",
-        "van-checkbox-group": "@vant/weapp/checkbox-group/index"
-    }
+        "van-checkbox-group": "@vant/weapp/checkbox-group/index",
+        "van-cascader": "@vant/weapp/cascader/index",
+        "van-search": "@vant/weapp/search/index",
+        "van-toast": "@vant/weapp/toast/index",
+        "van-notice-bar": "@vant/weapp/notice-bar/index"
+    },
+    "enablePullDownRefresh": true,
+    "lazyCodeLoading":"requiredComponents"
 }

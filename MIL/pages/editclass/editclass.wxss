@@ -1,0 +1,132 @@
+@import "/templates/header2/header2.wxss";
+.class-lists{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 200rpx;
+}
+.class-list{
+    display: flex;
+    flex-direction: column;
+    margin-left: 40rpx;
+    margin-right: 40rpx;
+    margin-top: 40rpx;
+}
+.small-class{
+    display: flex;
+    margin-left: 20rpx;
+    flex-wrap:wrap;
+}
+.small-class-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 40rpx;
+    margin-top: 40rpx;
+}
+.small-class-imgs{
+    position: relative;
+    width: 60rpx;
+    height: 60rpx;
+    margin-bottom: 10rpx;
+}
+.small-class-img{
+    width: 60rpx;
+    height: 60rpx;
+}
+.sc-delete-img{
+    position: absolute;  /* 绝对定位 */
+    bottom: 50rpx;       /* 距离底部 20rpx */
+    right: -10rpx;        /* 距离右侧 20rpx */
+    width: 30rpx;       /* 上层图片宽度 */
+    height: 30rpx;      /* 上层图片高度 */
+}
+.small-class-txt{
+    font-size: 14px;
+    margin-top: 5rpx;
+    color: #0e424d;
+}
+.big-class-imgs{
+    position: relative;
+    width: 100rpx;
+    height: 50rpx;
+    margin-bottom: 10rpx;
+}
+.bc-delete-img{
+    position: absolute;  /* 绝对定位 */
+    bottom: 40rpx;       /* 距离底部 20rpx */
+    right: -10rpx;        /* 距离右侧 20rpx */
+    width: 30rpx;       /* 上层图片宽度 */
+    height: 30rpx;      /* 上层图片高度 */
+}
+.big-class{
+    font-size: 16px;
+    color: #0e424d;
+    background-color: #75e4ef;
+    width: fit-content;
+    padding: 5rpx 15rpx 5rpx 15rpx;
+    border-radius: 10%;
+}
+.big-class.hidden{
+    font-size: 16px;
+    color: #0e424d;
+    background-color: #fff;
+    width: fit-content;
+    padding: 3rpx 13rpx 3rpx 13rpx;
+    border-radius: 10%;
+    border: 2px solid #75e4ef;
+}
+.confirm{
+    position: fixed;
+    bottom: 30rpx;
+    left: 50%;                  /* 定位到水平中点 */
+    transform: translateX(-50%); /* 向左移动自身宽度的一半 */
+    z-index: 9999;
+}
+.confirm-img{
+    width: 400rpx;
+    height: 80rpx;
+    margin-top: 200rpx;
+}
+.van-search__action {
+    margin-right: 40rpx !important; /* 调整这个值控制间距 */
+    margin-left: 20rpx !important;
+}
+.small-class-img-add{
+    width: 60rpx;
+    height: 60rpx;
+    margin-top: 40rpx;
+    margin-left: 40rpx;
+}
+.big-class-img-add{
+    width: 60rpx;
+    height: 60rpx;
+    margin-left: 40rpx;
+    margin-top: 40rpx;
+}
+.pop-contents{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.pop-title{
+    font-size: large;
+    font-weight: bold;
+    margin-top: 20rpx;
+    margin-bottom: 20rpx;
+}
+.pop-lists{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.pop-content{
+    display: flex;
+    margin-left: 40rpx;
+    margin-right: 40rpx;
+    margin-top: 20rpx;
+}
+.pop-btn-confirm{
+    width: 500rpx;
+    height: 90rpx;
+    margin-top: 40rpx;
+}

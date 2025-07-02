@@ -1,6 +1,7 @@
 .drop-down{
     border-color: wheat;
     border-width: 1rpx;
+    z-index: 100;
 }
 van-calendar {
     --calendar-height: 1000rpx;
@@ -30,6 +31,7 @@ van-calendar {
   .drop-down{
       width: 80%;
       background-color: white;
+      z-index: 100;
   }
   .export{
       width:20%;
